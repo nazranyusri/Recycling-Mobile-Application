@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class dbRecycle {
+class dbRecycle{
   // Collection reference
-  final CollectionReference recycleCollection =
-      FirebaseFirestore.instance.collection('recycle');
+  final CollectionReference recycleCollection = FirebaseFirestore.instance.collection('recycle');
 
   Future<void> addRecycleData(
     String userEmail,
@@ -23,8 +22,7 @@ class dbRecycle {
         'username': userEmail,
       });
 
-      final CollectionReference newDataCollection =
-          documentRef.collection('data');
+      final CollectionReference newDataCollection = documentRef.collection('data');
 
       await newDataCollection.add({
         'username': userEmail,
@@ -47,14 +45,10 @@ class dbRecycle {
     List<Map<String, dynamic>> cumulativeWeights = [];
 
     try {
-      final CollectionReference recycleCollection =
-          FirebaseFirestore.instance.collection('recycle');
+      final CollectionReference recycleCollection = FirebaseFirestore.instance.collection('recycle');
       QuerySnapshot snapshot = await recycleCollection.get();
 
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot
-          .docs
-          .map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>)
-          .toList();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs.map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>).toList();
       print('Number of documents: ${documents.length}');
 
       // Initialize the cumulative totals for each type
@@ -66,14 +60,11 @@ class dbRecycle {
 
       // Calculate the cumulative weights
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents) {
-        CollectionReference newDataCollection =
-            doc.reference.collection('data');
+        CollectionReference newDataCollection = doc.reference.collection('data');
         QuerySnapshot dataSnapshot = await newDataCollection.get();
 
         // Cast the dataSnapshot.docs list to the correct type
-        List<QueryDocumentSnapshot<Map<String, dynamic>>> dataDocs =
-            dataSnapshot.docs
-                .cast<QueryDocumentSnapshot<Map<String, dynamic>>>();
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> dataDocs = dataSnapshot.docs.cast<QueryDocumentSnapshot<Map<String, dynamic>>>();
         print('Number of data documents: ${dataDocs.length}');
 
         for (QueryDocumentSnapshot<Map<String, dynamic>> dataDoc in dataDocs) {
@@ -101,12 +92,10 @@ class dbRecycle {
       print('Cumulative Metal: $cumulativeMetal');
 
       // Add the cumulative totals to the list
-      cumulativeWeights
-          .add({'type': 'Plastic', 'totalWeight': cumulativePlastic});
+      cumulativeWeights.add({'type': 'Plastic', 'totalWeight': cumulativePlastic});
       cumulativeWeights.add({'type': 'Glass', 'totalWeight': cumulativeGlass});
       cumulativeWeights.add({'type': 'Paper', 'totalWeight': cumulativePaper});
-      cumulativeWeights
-          .add({'type': 'Rubber', 'totalWeight': cumulativeRubber});
+      cumulativeWeights.add({'type': 'Rubber', 'totalWeight': cumulativeRubber});
       cumulativeWeights.add({'type': 'Metal', 'totalWeight': cumulativeMetal});
     } catch (error) {
       print('Error retrieving cumulative weights: $error');
