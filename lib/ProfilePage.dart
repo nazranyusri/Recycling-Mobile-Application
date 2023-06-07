@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:recytrack/loginPage.dart';
 import 'package:recytrack/HomePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatelessWidget {
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginDemo()),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +62,8 @@ class ProfilePage extends StatelessWidget {
                         child: Center(
                           child: ElevatedButton(
                             child: Text('Log out'),
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginDemo(),
-                                ),
-                              );
-                            },
+                            onPressed: () => _signOut(
+                                context), // Modified onPressed callback
                           ),
                         ),
                       ),
@@ -77,10 +84,11 @@ class ProfilePage extends StatelessWidget {
                   child: Text(
                     "Login",
                     style: TextStyle(
-                        fontSize: 30,
-                        fontFamily: 'Montserrat',
-                        letterSpacing: 5,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 30,
+                      fontFamily: 'Montserrat',
+                      letterSpacing: 5,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
