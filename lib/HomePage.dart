@@ -22,7 +22,8 @@ class _RedirectPageState extends State<RedirectPage> {
   @override
   void initState() {
     super.initState();
-    userId = widget.userId; // Assign the user ID from the widget to the local variable
+    userId = widget
+        .userId; // Assign the user ID from the widget to the local variable
     _redirectToHomePage();
   }
 
@@ -31,11 +32,9 @@ class _RedirectPageState extends State<RedirectPage> {
     Widget homePage;
     if (userId == 'user') {
       homePage = HomePageUser();
-    } 
-    else if(userId == 'staff') {
+    } else if (userId == 'staff') {
       homePage = HomePageStaff();
-    }
-    else{
+    } else {
       homePage = LoginDemo();
     }
 
@@ -172,57 +171,58 @@ class HomeScreenUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      
       child: Column(
         children: [
           // Sliding banner here.
           Container(
             height: 75,
-            color: Colors.transparent, 
-            child:
-            Row(
+            color: Colors.transparent,
+            child: Row(
               // crossAxisAlignment:CrossAxisAlignment.center,
-              children: 
-               [
-                
-                Container( 
-                 padding: EdgeInsets.only(left: 10,top: 10), 
-                  child: Text('Hi, User!', style: TextStyle(fontSize: 25),)),
-              Container(
-                //button
-                padding: EdgeInsets.only(left: 75,top: 15),
-                child: ElevatedButton(
-                  //backgroundcolor
-                  style: ElevatedButton.styleFrom(
-                    primary: Color.fromRGBO(101, 145, 87, 1),
-                  ),
-                  child: Text('Become A Member Today'),
-                  onPressed: (){},
-                )
-              ),],),),
+              children: [
+                Container(
+                    padding: EdgeInsets.only(left: 10, top: 10),
+                    child: Text(
+                      'Hi, User!',
+                      style: TextStyle(fontSize: 25),
+                    )),
+                Container(
+                    //button
+                    padding: EdgeInsets.only(left: 75, top: 15),
+                    child: ElevatedButton(
+                      //backgroundcolor
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromRGBO(101, 145, 87, 1),
+                      ),
+                      child: Text('Become A Member Today'),
+                      onPressed: () {},
+                    )),
+              ],
+            ),
+          ),
 
-             
           Container(
             height: 200,
-            color: Colors.green, 
+            color: Colors.green,
             // child: HomeScreen()
-            child:const Center(child: Text('Banner')),
+            child: const Center(child: Text('Banner')),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Circular Progress bar
-               Container(
+              Container(
                 width: 175,
                 height: 175,
-                padding: const EdgeInsets.only(left: 15,top: 15),
+                padding: const EdgeInsets.only(left: 15, top: 15),
                 child: Stack(
                   alignment: Alignment.center,
                   fit: StackFit.expand,
                   children: const [
                     CircularProgressIndicator(
                       value: 0.9, // Set the progress value here
-                      valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(37, 243, 33, 1)),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color.fromRGBO(37, 243, 33, 1)),
                       backgroundColor: Colors.grey,
                       strokeWidth: 10,
                     ),
@@ -257,7 +257,6 @@ class HomeScreenUser extends StatelessWidget {
                 color: Colors.red,
                 child: const Center(child: Text('Leaderboard')),
               ),
-              
             ],
           ),
           Row(
@@ -265,40 +264,41 @@ class HomeScreenUser extends StatelessWidget {
             children: [
               // Find the Recycling Centres
               Card(
-      color: Color.fromARGB(255, 0, 24, 1),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Find the Recycling Centres',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Color.fromARGB(255, 0, 24, 1),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Find the Recycling Centres',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Navigate to the map page
+                        },
+                        child: const Text('Explore Map'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the map page
-              },
-              child: const Text('Explore Map'),
-            ),
-          ],
-        ),
+              // Location Waste Pickup
+              Container(
+                height: 200,
+                width: 175,
+                color: Colors.orange,
+                child: const Center(child: Text('Location Waste Pickup')),
+              ),
+            ],
+          ),
+        ],
       ),
-    ),
-    // Location Waste Pickup
-    Container(
-      height: 200,
-      width: 175,
-      color: Colors.orange,
-      child: const Center(child: Text('Location Waste Pickup')),
-    ),
-  ],
-),
-      ],),
     );
   }
 }
@@ -416,26 +416,27 @@ class _HomePageState2 extends State<HomePageStaff> {
 class HomeScreenStaff extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    body: Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.fromLTRB(10,10,10,30),
-              child: Text(
-                'Hi, Staff!',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 30),
+                child: Text(
+                  'Hi, Staff!',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-              ),
-              InkWell( // recycle button
+              InkWell(
+                // recycle button
                 onTap: () {
                   Navigator.push(
                     context,
@@ -448,7 +449,8 @@ class HomeScreenStaff extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: AssetImage('assets/images/wmsp_homepage_button1.jpg'),
+                      image:
+                          AssetImage('assets/images/wmsp_homepage_button1.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -456,7 +458,8 @@ class HomeScreenStaff extends StatelessWidget {
               ),
               Text('Recycle'),
               SizedBox(height: 16),
-              InkWell( // pick button
+              InkWell(
+                // pick button
                 onTap: () {
                   Navigator.push(
                     context,
@@ -469,7 +472,8 @@ class HomeScreenStaff extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: AssetImage('assets/images/wmsp_homepage_button2.jpeg'),
+                      image: AssetImage(
+                          'assets/images/wmsp_homepage_button2.jpeg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -477,11 +481,15 @@ class HomeScreenStaff extends StatelessWidget {
               ),
               Text('Waste Pickup'),
               SizedBox(height: 16),
-              InkWell( // inventory button
+              InkWell(
+                // inventory button
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => InventoryPage()),
+                    MaterialPageRoute(
+                        builder: (context) => InventoryPage(
+                              userEmail: '',
+                            )),
                   );
                 },
                 child: Container(
@@ -490,7 +498,8 @@ class HomeScreenStaff extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: AssetImage('assets/images/wmsp_homepage_button3.jpg'),
+                      image:
+                          AssetImage('assets/images/wmsp_homepage_button3.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),

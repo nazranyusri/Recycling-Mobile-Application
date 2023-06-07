@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class dbRecycle{
-  // Collection reference
-  final CollectionReference recycleCollection = FirebaseFirestore.instance.collection('recycle');
-
+class dbRecycle {
   Future<void> addRecycleData(
-    String username,
+    String userEmail,
     double weight,
     double plastic,
     double glass,
@@ -16,11 +13,12 @@ class dbRecycle{
     double point,
   ) async {
     try {
-      final DocumentReference documentRef = recycleCollection.doc(username);
-      final CollectionReference newDataCollection = documentRef.collection('data');
+      final DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(userEmail);
+      final CollectionReference recycleCollection =
+          userDocRef.collection('recycle');
 
-      await newDataCollection.add({
-        'username': username,
+      await recycleCollection.add({
         'weight': weight,
         'plastic': plastic,
         'glass': glass,
@@ -36,13 +34,22 @@ class dbRecycle{
     }
   }
 
-  Future<List<Map<String, dynamic>>> getCumulativeWeights() async {
+  Future<List<Map<String, dynamic>>> getCumulativeWeights(
+      String userEmail) async {
     List<Map<String, dynamic>> cumulativeWeights = [];
 
     try {
+      final DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(userEmail);
+      final CollectionReference recycleCollection =
+          userDocRef.collection('recycle');
+
       QuerySnapshot snapshot = await recycleCollection.get();
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs.map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>).toList();
-      print(documents);
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot
+          .docs
+          .map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>)
+          .toList();
+
       // Initialize the cumulative totals for each type
       double cumulativePlastic = 0;
       double cumulativeGlass = 0;
@@ -68,10 +75,12 @@ class dbRecycle{
       }
 
       // Add the cumulative totals to the list
-      cumulativeWeights.add({'type': 'Plastic', 'totalWeight': cumulativePlastic});
+      cumulativeWeights
+          .add({'type': 'Plastic', 'totalWeight': cumulativePlastic});
       cumulativeWeights.add({'type': 'Glass', 'totalWeight': cumulativeGlass});
       cumulativeWeights.add({'type': 'Paper', 'totalWeight': cumulativePaper});
-      cumulativeWeights.add({'type': 'Rubber', 'totalWeight': cumulativeRubber});
+      cumulativeWeights
+          .add({'type': 'Rubber', 'totalWeight': cumulativeRubber});
       cumulativeWeights.add({'type': 'Metal', 'totalWeight': cumulativeMetal});
     } catch (error) {
       print('Error retrieving cumulative weights: $error');
