@@ -17,6 +17,11 @@ class dbRecycle{
   ) async {
     try {
       final DocumentReference documentRef = recycleCollection.doc(username);
+
+      await documentRef.set({
+        'username': username,
+      });
+
       final CollectionReference newDataCollection = documentRef.collection('data');
 
       await newDataCollection.add({
@@ -37,22 +42,33 @@ class dbRecycle{
   }
 
   Future<List<Map<String, dynamic>>> getCumulativeWeights() async {
-    List<Map<String, dynamic>> cumulativeWeights = [];
+  List<Map<String, dynamic>> cumulativeWeights = [];
 
-    try {
-      QuerySnapshot snapshot = await recycleCollection.get();
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs.map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>).toList();
-      print(documents);
-      // Initialize the cumulative totals for each type
-      double cumulativePlastic = 0;
-      double cumulativeGlass = 0;
-      double cumulativePaper = 0;
-      double cumulativeRubber = 0;
-      double cumulativeMetal = 0;
+  try {
+    final CollectionReference recycleCollection = FirebaseFirestore.instance.collection('recycle');
+    QuerySnapshot snapshot = await recycleCollection.get();
 
-      // Calculate the cumulative weights
-      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents) {
-        Map<String, dynamic>? data = doc.data();
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs.map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>).toList();
+    print('Number of documents: ${documents.length}');
+
+    // Initialize the cumulative totals for each type
+    double cumulativePlastic = 0;
+    double cumulativeGlass = 0;
+    double cumulativePaper = 0;
+    double cumulativeRubber = 0;
+    double cumulativeMetal = 0;
+
+    // Calculate the cumulative weights
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents) {
+      CollectionReference newDataCollection = doc.reference.collection('data');
+      QuerySnapshot dataSnapshot = await newDataCollection.get();
+
+      // Cast the dataSnapshot.docs list to the correct type
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> dataDocs = dataSnapshot.docs.cast<QueryDocumentSnapshot<Map<String, dynamic>>>();
+      print('Number of data documents: ${dataDocs.length}');
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> dataDoc in dataDocs) {
+        Map<String, dynamic>? data = dataDoc.data();
 
         double plasticWeight = data['plastic'] ?? 0;
         double glassWeight = data['glass'] ?? 0;
@@ -66,17 +82,25 @@ class dbRecycle{
         cumulativeRubber += rubberWeight;
         cumulativeMetal += metalWeight;
       }
-
-      // Add the cumulative totals to the list
-      cumulativeWeights.add({'type': 'Plastic', 'totalWeight': cumulativePlastic});
-      cumulativeWeights.add({'type': 'Glass', 'totalWeight': cumulativeGlass});
-      cumulativeWeights.add({'type': 'Paper', 'totalWeight': cumulativePaper});
-      cumulativeWeights.add({'type': 'Rubber', 'totalWeight': cumulativeRubber});
-      cumulativeWeights.add({'type': 'Metal', 'totalWeight': cumulativeMetal});
-    } catch (error) {
-      print('Error retrieving cumulative weights: $error');
     }
 
-    return cumulativeWeights;
+    //troubleshoot
+    print('Cumulative Plastic: $cumulativePlastic');
+    print('Cumulative Glass: $cumulativeGlass');
+    print('Cumulative Paper: $cumulativePaper');
+    print('Cumulative Rubber: $cumulativeRubber');
+    print('Cumulative Metal: $cumulativeMetal');
+
+    // Add the cumulative totals to the list
+    cumulativeWeights.add({'type': 'Plastic', 'totalWeight': cumulativePlastic});
+    cumulativeWeights.add({'type': 'Glass', 'totalWeight': cumulativeGlass});
+    cumulativeWeights.add({'type': 'Paper', 'totalWeight': cumulativePaper});
+    cumulativeWeights.add({'type': 'Rubber', 'totalWeight': cumulativeRubber});
+    cumulativeWeights.add({'type': 'Metal', 'totalWeight': cumulativeMetal});
+  } catch (error) {
+    print('Error retrieving cumulative weights: $error');
   }
+
+  return cumulativeWeights;
+}
 }
