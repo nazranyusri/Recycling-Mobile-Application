@@ -488,7 +488,7 @@ class HomeScreenStaff extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => InventoryPage(
-                              userEmail: '',
+                            // userEmail: '',
                             )),
                   );
                 },

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recytrack/services/dbRecycle.dart';
 import 'package:recytrack/HomePage.dart';
-import 'package:recytrack/services/dbRecycle.dart';
 
 class WMSPRecyclePage extends StatefulWidget {
   const WMSPRecyclePage({Key? key}) : super(key: key);
@@ -12,57 +11,79 @@ class WMSPRecyclePage extends StatefulWidget {
 }
 
 class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
-  // Input controllers
-  final DBRecycle = dbRecycle();
-  TextEditingController userEmailController = TextEditingController();
+  //input controllers
+  TextEditingController usernameController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController plasticController = TextEditingController();
   TextEditingController glassController = TextEditingController();
   TextEditingController paperController = TextEditingController();
   TextEditingController rubberController = TextEditingController();
   TextEditingController metalController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Function to calculate the total weight
+  //init the total weight
+  double totalWeight = 0.0;
+
+  //create an instance of the database service
+  dbRecycle db = dbRecycle();
+
+  //calculate the total weight
   void calculateTotalWeight() {
-    double plastic = double.tryParse(plasticController.text) ?? 0.0;
-    double glass = double.tryParse(glassController.text) ?? 0.0;
-    double paper = double.tryParse(paperController.text) ?? 0.0;
-    double rubber = double.tryParse(rubberController.text) ?? 0.0;
-    double metal = double.tryParse(metalController.text) ?? 0.0;
+    double plasticWeight = double.tryParse(plasticController.text) ?? 0.0;
+    double glassWeight = double.tryParse(glassController.text) ?? 0.0;
+    double paperWeight = double.tryParse(paperController.text) ?? 0.0;
+    double rubberWeight = double.tryParse(rubberController.text) ?? 0.0;
+    double metalWeight = double.tryParse(metalController.text) ?? 0.0;
 
-    double totalWeight = plastic + glass + paper + rubber + metal;
-    weightController.text = totalWeight.toString();
+    setState(() {
+      totalWeight = plasticWeight +
+          glassWeight +
+          paperWeight +
+          rubberWeight +
+          metalWeight;
+      weightController.text = totalWeight.toStringAsFixed(2);
+    });
   }
 
-  // Function to calculate the total payment
+  //calculate the total payment
   double calculateTotalPayment() {
-    // Add your calculation logic here
-    return 0.0;
+    double plasticWeight = double.tryParse(plasticController.text) ?? 0.0;
+    double glassWeight = double.tryParse(glassController.text) ?? 0.0;
+    double paperWeight = double.tryParse(paperController.text) ?? 0.0;
+    double rubberWeight = double.tryParse(rubberController.text) ?? 0.0;
+    double metalWeight = double.tryParse(metalController.text) ?? 0.0;
+
+    double totalPayment = plasticWeight * 0.2 +
+        glassWeight * 0.3 +
+        paperWeight * 0.1 +
+        rubberWeight * 0.4 +
+        metalWeight * 0.5;
+
+    return totalPayment;
   }
 
-  // Function to calculate the total point
-  double calculateTotalPoint(double weight) {
-    // Add your calculation logic here
-    return 0.0;
+  //calculate the total point
+  double calculateTotalPoint(weight) {
+    double totalPoint = weight * 2;
+    return totalPoint;
   }
 
   // Function to show confirmation dialog
   Future<void> showConfirmationDialog(
-    String userEmail,
-    double weight,
-    double plastic,
-    double glass,
-    double paper,
-    double rubber,
-    double metal,
-    double paymentTotal,
-    double point,
-  ) async {
+      String username,
+      double weight,
+      double plastic,
+      double glass,
+      double paper,
+      double rubber,
+      double metal,
+      double paymentTotal,
+      double point) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Submission'),
+          title: Text('Confirm Submition'),
           content: Text('Are you sure you want to submit the recycle items?'),
           actions: [
             TextButton(
@@ -74,18 +95,8 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
             TextButton(
               child: Text('Update'),
               onPressed: () {
-                // Call the addRecycleData method on dbRecycle object
-                DBRecycle.addRecycleData(
-                  userEmail,
-                  weight,
-                  plastic,
-                  glass,
-                  paper,
-                  rubber,
-                  metal,
-                  paymentTotal,
-                  point,
-                );
+                db.addRecycleData(username, weight, plastic, glass, paper,
+                    rubber, metal, paymentTotal, point);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePageStaff()),
@@ -98,6 +109,7 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
     );
   }
 
+  //body
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,49 +139,188 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextFormField(
-                  controller: userEmailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter user email',
-                  ),
+              Container(
+                key: _formKey,
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Username',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: usernameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Enter customer's username",
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              // Rest of the form fields...
-              ElevatedButton(
-                onPressed: () {
-                  calculateTotalWeight();
-                },
-                child: Text('Calculate Total Weight'),
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Weight (kg)',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: weightController,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Total Weight',
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  String userEmail = userEmailController.text;
-                  double weight = double.tryParse(weightController.text) ?? 0.0;
-                  double plastic =
-                      double.tryParse(plasticController.text) ?? 0.0;
-                  double glass = double.tryParse(glassController.text) ?? 0.0;
-                  double paper = double.tryParse(paperController.text) ?? 0.0;
-                  double rubber = double.tryParse(rubberController.text) ?? 0.0;
-                  double metal = double.tryParse(metalController.text) ?? 0.0;
-                  double paymentTotal = calculateTotalPayment();
-                  double point = calculateTotalPoint(weight);
-
-                  showConfirmationDialog(
-                    userEmail,
-                    weight,
-                    plastic,
-                    glass,
-                    paper,
-                    rubber,
-                    metal,
-                    paymentTotal,
-                    point,
-                  );
-                },
-                child: Text('Submit'),
+              Container(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  children: [
+                    Text(
+                      'Item',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).dividerColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DataTable(
+                  columns: [
+                    DataColumn(
+                      label: Flexible(
+                        child: Text('Type'),
+                        fit: FlexFit.tight,
+                      ),
+                    ),
+                    DataColumn(
+                      label: Flexible(
+                        child: Text('Quantity (kg)'),
+                        fit: FlexFit.tight,
+                      ),
+                    ),
+                  ],
+                  rows: [
+                    DataRow(cells: [
+                      DataCell(Text('Plastic')),
+                      DataCell(TextFormField(
+                        controller: plasticController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          calculateTotalWeight();
+                        },
+                      )),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('Glass')),
+                      DataCell(TextFormField(
+                        controller: glassController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          calculateTotalWeight();
+                        },
+                      )),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('Paper')),
+                      DataCell(TextFormField(
+                        controller: paperController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          calculateTotalWeight();
+                        },
+                      )),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('Rubber')),
+                      DataCell(TextFormField(
+                        controller: rubberController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          calculateTotalWeight();
+                        },
+                      )),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('Metal')),
+                      DataCell(TextFormField(
+                        controller: metalController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          calculateTotalWeight();
+                        },
+                      )),
+                    ]),
+                  ],
+                ),
+              ),
+              SizedBox(height: 4),
+              Container(
+                padding: EdgeInsets.all(16),
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePageStaff()),
+                          );
+                        },
+                        child: Text('Cancel'),
+                        style: TextButton.styleFrom(
+                          primary: Colors.black,
+                        )),
+                    SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Retrieve the user input values
+                        String username = usernameController.text;
+                        double weight =
+                            double.tryParse(weightController.text) ?? 0.0;
+                        double paymentTotal = calculateTotalPayment();
+                        double point = calculateTotalPoint(weight);
+                        double plastic =
+                            double.tryParse(plasticController.text) ?? 0.0;
+                        double glass =
+                            double.tryParse(glassController.text) ?? 0.0;
+                        double paper =
+                            double.tryParse(paperController.text) ?? 0.0;
+                        double rubber =
+                            double.tryParse(rubberController.text) ?? 0.0;
+                        double metal =
+                            double.tryParse(metalController.text) ?? 0.0;
+                        showConfirmationDialog(username, weight, plastic, glass,
+                            paper, rubber, metal, paymentTotal, point);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromRGBO(101, 145, 87, 1),
+                      ),
+                      child: Text('Submit'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

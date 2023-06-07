@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class dbRecycle {
+  // Collection reference
+  final CollectionReference recycleCollection =
+      FirebaseFirestore.instance.collection('recycle');
+
   Future<void> addRecycleData(
     String userEmail,
     double weight,
@@ -13,12 +17,17 @@ class dbRecycle {
     double point,
   ) async {
     try {
-      final DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection('users').doc(userEmail);
-      final CollectionReference recycleCollection =
-          userDocRef.collection('recycle');
+      final DocumentReference documentRef = recycleCollection.doc(userEmail);
 
-      await recycleCollection.add({
+      await documentRef.set({
+        'username': userEmail,
+      });
+
+      final CollectionReference newDataCollection =
+          documentRef.collection('data');
+
+      await newDataCollection.add({
+        'username': userEmail,
         'weight': weight,
         'plastic': plastic,
         'glass': glass,
@@ -34,21 +43,19 @@ class dbRecycle {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getCumulativeWeights(
-      String userEmail) async {
+  Future<List<Map<String, dynamic>>> getCumulativeWeights() async {
     List<Map<String, dynamic>> cumulativeWeights = [];
 
     try {
-      final DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection('users').doc(userEmail);
       final CollectionReference recycleCollection =
-          userDocRef.collection('recycle');
-
+          FirebaseFirestore.instance.collection('recycle');
       QuerySnapshot snapshot = await recycleCollection.get();
+
       List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot
           .docs
           .map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>)
           .toList();
+      print('Number of documents: ${documents.length}');
 
       // Initialize the cumulative totals for each type
       double cumulativePlastic = 0;
@@ -59,20 +66,39 @@ class dbRecycle {
 
       // Calculate the cumulative weights
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents) {
-        Map<String, dynamic>? data = doc.data();
+        CollectionReference newDataCollection =
+            doc.reference.collection('data');
+        QuerySnapshot dataSnapshot = await newDataCollection.get();
 
-        double plasticWeight = data['plastic'] ?? 0;
-        double glassWeight = data['glass'] ?? 0;
-        double paperWeight = data['paper'] ?? 0;
-        double rubberWeight = data['rubber'] ?? 0;
-        double metalWeight = data['metal'] ?? 0;
+        // Cast the dataSnapshot.docs list to the correct type
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> dataDocs =
+            dataSnapshot.docs
+                .cast<QueryDocumentSnapshot<Map<String, dynamic>>>();
+        print('Number of data documents: ${dataDocs.length}');
 
-        cumulativePlastic += plasticWeight;
-        cumulativeGlass += glassWeight;
-        cumulativePaper += paperWeight;
-        cumulativeRubber += rubberWeight;
-        cumulativeMetal += metalWeight;
+        for (QueryDocumentSnapshot<Map<String, dynamic>> dataDoc in dataDocs) {
+          Map<String, dynamic>? data = dataDoc.data();
+
+          double plasticWeight = data['plastic'] ?? 0;
+          double glassWeight = data['glass'] ?? 0;
+          double paperWeight = data['paper'] ?? 0;
+          double rubberWeight = data['rubber'] ?? 0;
+          double metalWeight = data['metal'] ?? 0;
+
+          cumulativePlastic += plasticWeight;
+          cumulativeGlass += glassWeight;
+          cumulativePaper += paperWeight;
+          cumulativeRubber += rubberWeight;
+          cumulativeMetal += metalWeight;
+        }
       }
+
+      //troubleshoot
+      print('Cumulative Plastic: $cumulativePlastic');
+      print('Cumulative Glass: $cumulativeGlass');
+      print('Cumulative Paper: $cumulativePaper');
+      print('Cumulative Rubber: $cumulativeRubber');
+      print('Cumulative Metal: $cumulativeMetal');
 
       // Add the cumulative totals to the list
       cumulativeWeights
