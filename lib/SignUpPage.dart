@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recytrack/loginPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -7,12 +9,60 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final fullname = TextEditingController();
-  final email = TextEditingController();
-  final contactNo = TextEditingController();
-  final location = TextEditingController();
-  final username = TextEditingController();
-  final password = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  final fullName = TextEditingController(); // Updated variable declaration
+  final email = TextEditingController(); // Updated variable declaration
+  final contactNo = TextEditingController(); // Updated variable declaration
+  final location = TextEditingController(); // Updated variable declaration
+  final username = TextEditingController(); // Updated variable declaration
+  final password = TextEditingController(); // Updated variable declaration
+  bool showSpinner = false;
+
+  Future<void> _createUserWithEmailAndPassword() async {
+    final String fullNameText = fullName.text;
+    final String emailText = email.text;
+    final String contactNoText = contactNo.text;
+    final String locationText = location.text;
+    final String usernameText = username.text;
+    final String passwordText = password.text;
+
+    print(
+        'Add $fullNameText $emailText $contactNoText $locationText $usernameText $passwordText into the debug console');
+
+    setState(() {
+      showSpinner = true;
+    });
+
+    try {
+      final newUser = await _auth.createUserWithEmailAndPassword(
+        email: emailText,
+        password: passwordText,
+      );
+
+      if (newUser != null) {
+        // Add additional user info to Firestore
+        final userCollection = FirebaseFirestore.instance.collection('users');
+        final user = _auth.currentUser;
+
+        await userCollection.doc(user!.uid).set({
+          'full_name': fullNameText,
+          'email': emailText,
+          'contact_no': contactNoText,
+          'location': locationText,
+          'username': usernameText,
+          'role': 'user', // Assigning role as "user"
+        });
+
+        Navigator.pushNamed(context, 'login_screen');
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    setState(() {
+      showSpinner = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +107,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 30.0),
                   TextField(
-                    controller: fullname,
+                    controller: fullName,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -71,6 +121,9 @@ class _SignupPageState extends State<SignupPage> {
                   SizedBox(height: 17.0),
                   TextField(
                     controller: email,
+                    onChanged: (value) {
+                      //Do something with the user input.
+                    },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -90,7 +143,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
-                      labelText: "Contact No",
+                      labelText: "Contact No.",
                       hintText: 'Enter your Contact Number',
                     ),
                   ),
@@ -123,6 +176,9 @@ class _SignupPageState extends State<SignupPage> {
                   SizedBox(height: 17.0),
                   TextField(
                     controller: password,
+                    onChanged: (value) {
+                      //Do something with the user input.
+                    },
                     obscureText: true,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -143,17 +199,7 @@ class _SignupPageState extends State<SignupPage> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: TextButton(
-                      onPressed: () {
-                        print(
-                          'Add ${fullname.text} ${email.text} ${contactNo.text} ${location.text} ${username.text} ${password.text} into the debug console',
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginDemo(),
-                          ),
-                        );
-                      },
+                      onPressed: _createUserWithEmailAndPassword,
                       child: Text(
                         'SIGN UP',
                         style: TextStyle(

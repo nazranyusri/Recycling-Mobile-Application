@@ -1,28 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recytrack/SignupPage.dart';
 import 'package:recytrack/HomePage.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-//test
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginDemo(),
-    );
-  }
-}
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginDemo extends StatefulWidget {
   const LoginDemo({Key? key}) : super(key: key);
@@ -34,6 +14,77 @@ class LoginDemo extends StatefulWidget {
 class _LoginDemoState extends State<LoginDemo> {
   final username = TextEditingController();
   final password = TextEditingController();
+  String errorMessage = '';
+
+  Future<void> _loginWithEmailAndPassword() async {
+    final String usernameText = username.text;
+    final String passwordText = password.text;
+
+    try {
+      // await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: usernameText,
+        password: passwordText,
+      );
+
+      User? user = userCredential.user;
+      if (user != null) {
+        // Check if user exists in Firestore
+        final userCollection = FirebaseFirestore.instance.collection('users');
+        DocumentSnapshot snapshot = await userCollection.doc(user.uid).get();
+
+        if (snapshot.exists) {
+          String role = snapshot.get('role') ?? '';
+
+          if (role.isNotEmpty) {
+            // Redirect to appropriate home page based on user role
+            if (role == 'user') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePageUser(),
+                ),
+              );
+            } else if (role == 'staff') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePageStaff(),
+                ),
+              );
+            }
+          } else {
+            setState(() {
+              errorMessage = 'User role not found.';
+            });
+          }
+        } else {
+          setState(() {
+            errorMessage = 'User not found in database.';
+          });
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setState(() {
+          errorMessage = 'No user found with this email.';
+        });
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          errorMessage = 'Invalid password.';
+        });
+      } else {
+        setState(() {
+          errorMessage = 'An error occurred. Please try again later.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'An error occurred. Please try again later.';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,16 +162,7 @@ class _LoginDemoState extends State<LoginDemo> {
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RedirectPage(userId: '${username.text}',)),
-                            );
-                            print(
-                              'Add ${username.text}  ${password.text} into the debug console',
-                            );
-                          },
+                          onPressed: _loginWithEmailAndPassword,
                           child: Text(
                             'LOGIN',
                             style: TextStyle(
@@ -133,7 +175,16 @@ class _LoginDemoState extends State<LoginDemo> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 160),
+                    SizedBox(height: 16.0),
+                    if (errorMessage.isNotEmpty)
+                      Text(
+                        errorMessage,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                        ),
+                      ),
+                    SizedBox(height: 144.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -146,7 +197,8 @@ class _LoginDemoState extends State<LoginDemo> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignupPage()),
+                                builder: (context) => SignupPage(),
+                              ),
                             );
                           },
                           child: Text(
