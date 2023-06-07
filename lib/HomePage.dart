@@ -6,6 +6,7 @@ import 'package:recytrack/loginPage.dart';
 import 'package:recytrack/WMSP/wmsp_recycle.dart';
 import 'package:recytrack/WMSP/wmsp_inventory.dart';
 import 'package:recytrack/WMSP/wmsp_request.dart';
+import 'package:recytrack/leaderboard.dart';
 
 class RedirectPage extends StatefulWidget {
   final String userId; // Pass the user ID to this page
@@ -251,11 +252,19 @@ class HomeScreenUser extends StatelessWidget {
               // ),
 
               // Leaderboard
-              Container(
-                height: 150,
-                width: 175,
-                color: Colors.red,
-                child: const Center(child: Text('Leaderboard')),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LeaderboardPage()),
+                  );
+                  LeaderboardPage();
+                },
+                child: Container(
+                  height: 150,
+                  width: 175,
+                  child: const Center(child: Text('Leaderboard')),
+                ),
               ),
             ],
           ),
