@@ -45,6 +45,7 @@ class _SignupPageState extends State<SignupPage> {
         final user = _auth.currentUser;
 
         await userCollection.doc(user!.uid).set({
+          'uid': user.uid, // Store the UID in the document
           'full_name': fullNameText,
           'email': emailText,
           'contact_no': contactNoText,

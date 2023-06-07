@@ -50,79 +50,87 @@ class _InventoryPageState extends State<InventoryPage> {
             );
           },
         ),
-      ),    body: FutureBuilder<List<Map<String, dynamic>>>(
-      future: _dataFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          List<Map<String, dynamic>> dataFromDatabase = snapshot.data ?? [];
-          List<Map<String, dynamic>> cumulativeWeights = dataFromDatabase.isNotEmpty ? dataFromDatabase : List<Map<String, dynamic>>.filled(5, {'type': '', 'totalWeight': 0});
+      ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _dataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            List<Map<String, dynamic>> dataFromDatabase = snapshot.data ?? [];
+            List<Map<String, dynamic>> cumulativeWeights =
+                dataFromDatabase.isNotEmpty
+                    ? dataFromDatabase
+                    : List<Map<String, dynamic>>.filled(
+                        5, {'type': '', 'totalWeight': 0});
             return SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Total Weight (kg)',
-                          style:
-                              TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Total Weight (kg)',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Theme.of(context).dividerColor),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        SizedBox(height: 8),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Theme.of(context).dividerColor),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            calculateTotalWeight(cumulativeWeights).toStringAsFixed(2),
-                            style: TextStyle(fontSize: 18),
-                          ),
+                        child: Text(
+                          calculateTotalWeight(cumulativeWeights)
+                              .toStringAsFixed(2),
+                          style: TextStyle(fontSize: 18),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Theme.of(context).dividerColor),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: DataTable(
-                      columns: [
-                        DataColumn(
-                          label: Flexible(
-                            child: Text('Type'),
-                            fit: FlexFit.tight,
-                          ),
-                        ),
-                        DataColumn(
-                          label: Flexible(
-                            child: Text('Quantity (kg)'),
-                            fit: FlexFit.tight,
-                          ),
-                        ),
-                      ],
-                      rows: dataFromDatabase.map((data) {
-                        return DataRow(cells: [
-                          DataCell(Text(data['type'] ?? '')), // Ensure the key is correct and handle null values
-                          DataCell(Text(data['totalWeight']?.toString() ?? '')), // Ensure the key is correct and handle null values
-                        ]);
-                      }).toList(),
-                    ),
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).dividerColor),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ],
-              )
-            );
+                  child: DataTable(
+                    columns: [
+                      DataColumn(
+                        label: Flexible(
+                          child: Text('Type'),
+                          fit: FlexFit.tight,
+                        ),
+                      ),
+                      DataColumn(
+                        label: Flexible(
+                          child: Text('Quantity (kg)'),
+                          fit: FlexFit.tight,
+                        ),
+                      ),
+                    ],
+                    rows: dataFromDatabase.map((data) {
+                      return DataRow(cells: [
+                        DataCell(Text(data['type'] ??
+                            '')), // Ensure the key is correct and handle null values
+                        DataCell(Text(data['totalWeight']?.toString() ??
+                            '')), // Ensure the key is correct and handle null values
+                      ]);
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ));
           }
         },
       ),

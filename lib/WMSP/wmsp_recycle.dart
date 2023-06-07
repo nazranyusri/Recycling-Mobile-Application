@@ -36,8 +36,11 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
     double metalWeight = double.tryParse(metalController.text) ?? 0.0;
 
     setState(() {
-      totalWeight =
-          plasticWeight + glassWeight + paperWeight + rubberWeight + metalWeight;
+      totalWeight = plasticWeight +
+          glassWeight +
+          paperWeight +
+          rubberWeight +
+          metalWeight;
       weightController.text = totalWeight.toStringAsFixed(2);
     });
   }
@@ -50,12 +53,11 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
     double rubberWeight = double.tryParse(rubberController.text) ?? 0.0;
     double metalWeight = double.tryParse(metalController.text) ?? 0.0;
 
-    double totalPayment = 
-      plasticWeight * 0.2 +
-      glassWeight * 0.3 +
-      paperWeight * 0.1 +
-      rubberWeight * 0.4 +
-      metalWeight * 0.5;
+    double totalPayment = plasticWeight * 0.2 +
+        glassWeight * 0.3 +
+        paperWeight * 0.1 +
+        rubberWeight * 0.4 +
+        metalWeight * 0.5;
 
     return totalPayment;
   }
@@ -67,7 +69,16 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
   }
 
   // Function to show confirmation dialog
-  Future<void> showConfirmationDialog(String username, double weight, double plastic, double glass, double paper, double rubber, double metal, double paymentTotal, double point) async {
+  Future<void> showConfirmationDialog(
+      String username,
+      double weight,
+      double plastic,
+      double glass,
+      double paper,
+      double rubber,
+      double metal,
+      double paymentTotal,
+      double point) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -84,11 +95,12 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
             TextButton(
               child: Text('Update'),
               onPressed: () {
-                db.addRecycleData(username, weight, plastic, glass, paper, rubber, metal, paymentTotal, point);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePageStaff ()),
-                  );
+                db.addRecycleData(username, weight, plastic, glass, paper,
+                    rubber, metal, paymentTotal, point);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePageStaff()),
+                );
               },
             ),
           ],
@@ -287,7 +299,7 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
                         String username = usernameController.text;
                         double weight =
                             double.tryParse(weightController.text) ?? 0.0;
-                        double paymentTotal = calculateTotalPayment(); 
+                        double paymentTotal = calculateTotalPayment();
                         double point = calculateTotalPoint(weight);
                         double plastic =
                             double.tryParse(plasticController.text) ?? 0.0;
@@ -299,7 +311,8 @@ class _WMSPRecyclePageState extends State<WMSPRecyclePage> {
                             double.tryParse(rubberController.text) ?? 0.0;
                         double metal =
                             double.tryParse(metalController.text) ?? 0.0;
-                        showConfirmationDialog(username, weight, plastic, glass, paper, rubber, metal, paymentTotal, point);
+                        showConfirmationDialog(username, weight, plastic, glass,
+                            paper, rubber, metal, paymentTotal, point);
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color.fromRGBO(101, 145, 87, 1),
