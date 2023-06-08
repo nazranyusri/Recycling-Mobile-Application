@@ -175,11 +175,13 @@ class HomeScreenUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          
           Container(
             height: 75,
-            color: Colors.transparent,
+            color: Color.fromARGB(240, 240, 240, 240),
             child: Row(
               // crossAxisAlignment:CrossAxisAlignment.center,
               children: [
@@ -195,7 +197,7 @@ class HomeScreenUser extends StatelessWidget {
                     child: ElevatedButton(
                       //backgroundcolor
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(101, 145, 87, 1),
+                        primary: Color.fromRGBO(0, 121, 46, 1),
                       ),
                       child: Text('Become A Member Today'),
                       onPressed: () {
@@ -225,7 +227,7 @@ class HomeScreenUser extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  fixedSize: Size(185, 185),
+                  fixedSize: Size(180, 180),
                   shadowColor: Colors.green[750],
                   primary: Color.fromRGBO(243, 243, 243, 0.995),
                 ),
@@ -294,7 +296,7 @@ class HomeScreenUser extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  fixedSize: Size(185, 185),
+                  fixedSize: Size(180, 180),
                   shadowColor: Colors.green[750],
                   primary: Color.fromRGBO(243, 243, 243, 0.995),
                 ),
@@ -318,9 +320,10 @@ class HomeScreenUser extends StatelessWidget {
                   // padding: const EdgeInsets.only(left: 5,right: 5, top: 5, bottom: 5),
                   child:
                 
-                const Stack(
+                const Text(
+'test'
                     // alignment: Alignment.center,
-                    fit: StackFit.expand,
+                    // fit: StackFit.expand,
                     // children: [
                       
                     //   CircularProgressIndicator(
@@ -392,8 +395,19 @@ class HomeScreenUser extends StatelessWidget {
             
           ),
         ),
+        child: const Center(
+          child: Text(
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+            'Request Waste Pickup'
+          ),
         ),
-        ),),
+      ),
+    ),
+        ),
+        ),
         
   // ),
     // ],
@@ -451,11 +465,11 @@ class HomeScreenUser extends StatelessWidget {
 // ),
   
   // Add margin to the Column widget itself
-),
+// ],),
 
 
           Container(
-            margin: const EdgeInsets.only(top: 20, bottom: 20),
+            margin: const EdgeInsets.only(top: 10, bottom: 20),
             padding: EdgeInsets.only(top: 10, bottom: 10),
             color: Colors.green,
               child: Row(
@@ -481,7 +495,7 @@ class HomeScreenUser extends StatelessWidget {
                       child: ElevatedButton(
                         //backgroundcolor
                         style: ElevatedButton.styleFrom(
-                          primary: Color.fromRGBO(101, 145, 87, 1),
+                          primary: Color.fromRGBO(0, 121, 46, 1),
                         ),
                         child: Text('Explore Map'),
                         onPressed: () {
