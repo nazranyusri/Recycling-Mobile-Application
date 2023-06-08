@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:recytrack/RecyclePage.dart';
 import 'package:recytrack/HistoryPage.dart';
 import 'package:recytrack/ProfilePage.dart';
+import 'package:recytrack/SubscribePage.dart';
 import 'package:recytrack/loginPage.dart';
 import 'package:recytrack/WMSP/wmsp_recycle.dart';
 import 'package:recytrack/WMSP/wmsp_inventory.dart';
 import 'package:recytrack/WMSP/wmsp_request.dart';
+import 'package:recytrack/LocationPage.dart';
+import 'package:recytrack/UserRequestPage.dart';
 
 class RedirectPage extends StatefulWidget {
-  final String userId; // Pass the user ID to this page
-
   RedirectPage({required this.userId});
+
+  final String userId; // Pass the user ID to this page
 
   @override
   _RedirectPageState createState() => _RedirectPageState();
@@ -68,6 +71,12 @@ class _HomePageState1 extends State<HomePageUser> {
   late PageController _pageController;
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
@@ -82,12 +91,6 @@ class _HomePageState1 extends State<HomePageUser> {
         curve: Curves.easeInOut,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
@@ -108,7 +111,7 @@ class _HomePageState1 extends State<HomePageUser> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+        backgroundColor: Color.fromRGBO(241, 241, 241, 1),
         body: GestureDetector(
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity! > 0) {
@@ -172,8 +175,8 @@ class HomeScreenUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Sliding banner here.
           Container(
             height: 75,
             color: Colors.transparent,
@@ -195,7 +198,12 @@ class HomeScreenUser extends StatelessWidget {
                         primary: Color.fromRGBO(101, 145, 87, 1),
                       ),
                       child: Text('Become A Member Today'),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SubscribePage()),
+                        );
+                      },
                     )),
               ],
             ),
@@ -208,94 +216,312 @@ class HomeScreenUser extends StatelessWidget {
             child: const Center(child: Text('Banner')),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // Circular Progress bar
-              Container(
-                width: 175,
-                height: 175,
-                padding: const EdgeInsets.only(left: 15, top: 15),
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.expand,
-                  children: const [
-                    CircularProgressIndicator(
-                      value: 0.9, // Set the progress value here
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Color.fromRGBO(37, 243, 33, 1)),
-                      backgroundColor: Colors.grey,
-                      strokeWidth: 10,
-                    ),
-                    Icon(
-                      Icons.check,
-                      size: 50,
-                      color: Color.fromARGB(255, 0, 107, 25),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Text(
-                        '9/10 items recycled',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 15,right: 15, top: 15, bottom: 15),
+                  
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  fixedSize: Size(185, 185),
+                  shadowColor: Colors.green[750],
+                  primary: Color.fromRGBO(243, 243, 243, 0.995),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HistoryPage()),
+                  );
+                },child: 
+                
+                
+                 Container(
+                  width: 150,
+                  height: 150,
+                  padding: EdgeInsetsDirectional.all(0),
+                  margin: EdgeInsetsDirectional.all(0),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.white,
+                  //   borderRadius: BorderRadius.circular(20),
+                  // ),
+                  // padding: const EdgeInsets.only(left: 5,right: 5, top: 5, bottom: 5),
+                  child:
+                
+                const Stack(
+                    // alignment: Alignment.center,
+                    fit: StackFit.expand,
+                    children: [
+                      
+                      CircularProgressIndicator(
+                        value: 0.9, // Set the progress value here
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Color.fromRGBO(0, 221, 52, 1)),
+                        backgroundColor: Colors.grey,
+                        strokeWidth: 10,
+                      ),
+                      
+                      Icon(
+                        Icons.check,
+                        size: 50,
+                        color: Color.fromARGB(255, 0, 107, 25),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        child: Text(
+                          '9/10 '
+                          'items recycled',
+                          style: TextStyle(
+                            color: Color.fromRGBO(0, 54, 18, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      ),
+                    ],
+                    
+                  ),
+                 ),
+              ),
+            
+             
+              // Leaderboard
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 15,right: 15, top: 15, bottom: 15),
+                  
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  fixedSize: Size(185, 185),
+                  shadowColor: Colors.green[750],
+                  primary: Color.fromRGBO(243, 243, 243, 0.995),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HistoryPage()),
+                  );
+                },child: 
+                
+                
+                 Container(
+                  width: 150,
+                  height: 150,
+                  padding: EdgeInsetsDirectional.all(0),
+                  margin: EdgeInsetsDirectional.all(0),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.white,
+                  //   borderRadius: BorderRadius.circular(20),
+                  // ),
+                  // padding: const EdgeInsets.only(left: 5,right: 5, top: 5, bottom: 5),
+                  child:
+                
+                const Stack(
+                    // alignment: Alignment.center,
+                    fit: StackFit.expand,
+                    // children: [
+                      
+                    //   CircularProgressIndicator(
+                    //     value: 0.9, // Set the progress value here
+                    //     valueColor: AlwaysStoppedAnimation<Color>(
+                    //         Color.fromRGBO(0, 221, 52, 1)),
+                    //     backgroundColor: Colors.grey,
+                    //     strokeWidth: 10,
+                    //   ),
+                      
+                    //   Icon(
+                    //     Icons.check,
+                    //     size: 50,
+                    //     color: Color.fromARGB(255, 0, 107, 25),
+                    //   ),
+                    //   Positioned(
+                    //     bottom: 10,
+                    //     child: Text(
+                    //       '9/10 '
+                    //       'items recycled',
+                    //       style: TextStyle(
+                    //         color: Color.fromRGBO(0, 54, 18, 1),
+                    //         fontSize: 15,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ],
+                    
+                  ),
+                 ),
+              ),
+            ],
+          ),
+
+          Row(
+            
+            
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+          
+          backgroundColor: Color.fromRGBO(245, 245, 245, 0.995), 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          fixedSize: Size(350, 150),
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UserRequestPage()),
+          );
+        },
+        child: Container(
+        width: 300,
+        height: 100,
+        padding: const EdgeInsets.only(left: 10,right: 10, top: 20, bottom: 20),
+        decoration: BoxDecoration(
+
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: AssetImage('assets/images/wmsp_homepage_button2.jpeg'),
+            fit: BoxFit.cover,
+            
+          ),
+        ),
+        ),
+        ),
+  // ),
+    ],
+
+    // ElevatedButton(
+      
+    //   style: ElevatedButton.styleFrom(
+        
+    //     backgroundColor: Color.fromRGBO(255, 255, 255, 1), 
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(20),
+    //     ),
+    //     fixedSize: Size(350, 150),
+    //   ),
+    //   onPressed: () {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => UserRequestPage()),
+    //     );
+    //   },
+    //   child: Container(
+    //     width: 300,
+    //     height: 100,
+    //     padding: const EdgeInsets.only(left: 10,right: 10, top: 20, bottom: 20),
+    //     decoration: BoxDecoration(
+
+    //       color: Colors.white,
+    //       borderRadius: BorderRadius.circular(10),
+    //       image: DecorationImage(
+    //         image: AssetImage('assets/images/wmsp_homepage_button2.jpeg'),
+    //         fit: BoxFit.cover,
+            
+    //       ),
+    //     ),
+    //     child: const Center(
+    //       child: Text(
+    //         style: TextStyle(
+    //           color: Colors.black,
+    //           fontSize: 20,
+    //         ),
+    //         'Request Waste Pickup'
+    //       )
+    //     )
+    //   ),
+    // ),
+   
+      
+    // Container(
+      
+      // margin: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+
+    //   child: const Text('Request Waste Pickup'),),
+    // SizedBox(height: 20), // 
+      // ),
+// ),
+  
+  // Add margin to the Column widget itself
+),
+
+
+          Container(
+            margin: const EdgeInsets.only(top: 20, bottom: 20),
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            color: Colors.green,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                    children:[
+              // color: Colors.green[900],
+              // Container(
+                // ColoredBox(
+                //   color: Colors.green[900],
+                      const Text(
+                            'Find the Recycling Centres',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        //  ),  
+                    Container(
+                      //button
+                      // padding: EdgeInsets.only(left: 75, top: 15),
+                      margin: EdgeInsets.only(left: 20),
+                      child: ElevatedButton(
+                        //backgroundcolor
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromRGBO(101, 145, 87, 1),
+                        ),
+                        child: Text('Explore Map'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LocationPage()),
+                          );
+                        },
+
                       ),
                     ),
                   ],
-                ),
-              ),
-              // const SizedBox(
-              //   height: 200,
-              //   width: 200,
-              //   child: CircularProgressIndicator(),
+              //   ),
               // ),
+                
+            
+              // Card(
+              //   color: Color.fromARGB(255, 0, 24, 1),
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(50.0),
 
-              // Leaderboard
-              Container(
-                height: 150,
-                width: 175,
-                color: Colors.red,
-                child: const Center(child: Text('Leaderboard')),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Find the Recycling Centres
-              Card(
-                color: Color.fromARGB(255, 0, 24, 1),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Find the Recycling Centres',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the map page
-                        },
-                        child: const Text('Explore Map'),
-                      ),
-                    ],
+                //       child: Column(
+                //         children: [
+                //           const Text(
+                //             'Find the Recycling Centres',
+                //             style: TextStyle(
+                //               fontSize: 16,
+                //               fontWeight: FontWeight.bold,
+                //               color: Colors.white,
+                //             ),
+                //           ),
+                //           ElevatedButton(
+                //             child: const Text('Explore Map'),
+                //             onPressed: () {
+                //               LocationPage();
+                //             }
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                  // ),
                   ),
-                ),
-              ),
-              // Location Waste Pickup
-              Container(
-                height: 200,
-                width: 175,
-                color: Colors.orange,
-                child: const Center(child: Text('Location Waste Pickup')),
-              ),
-            ],
-          ),
+                ), 
         ],
       ),
     );
@@ -312,6 +538,12 @@ class _HomePageState2 extends State<HomePageStaff> {
   late PageController _pageController;
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
@@ -326,12 +558,6 @@ class _HomePageState2 extends State<HomePageStaff> {
         curve: Curves.easeInOut,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
