@@ -356,12 +356,14 @@ class HomeScreenUser extends StatelessWidget {
             ],
           ),
 
-          Row(
+          Center(
             
             
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-        ElevatedButton(
+  // mainAxisAlignment: MainAxisAlignment.center,
+  child: Container(
+    margin: EdgeInsetsDirectional.all(10),
+    child: 
+    ElevatedButton(
           style: ElevatedButton.styleFrom(
           
           backgroundColor: Color.fromRGBO(245, 245, 245, 0.995), 
@@ -391,9 +393,10 @@ class HomeScreenUser extends StatelessWidget {
           ),
         ),
         ),
-        ),
+        ),),
+        
   // ),
-    ],
+    // ],
 
     // ElevatedButton(
       
