@@ -268,7 +268,6 @@ class HomeScreenUser extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         'Find the Recycling Centres',
