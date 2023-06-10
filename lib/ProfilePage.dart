@@ -62,8 +62,6 @@ class ProfilePage extends StatelessWidget {
 
                     final userData =
                         snapshot.data!.data() as Map<String, dynamic>;
-                    //               final fullName = userData['full_name'] as String?;
-                    // final username = userData['username'] as String?;
 
                     return Container(
                       width: 400,

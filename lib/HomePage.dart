@@ -9,6 +9,7 @@ import 'package:recytrack/WMSP/wmsp_inventory.dart';
 import 'package:recytrack/WMSP/wmsp_request.dart';
 import 'package:recytrack/LocationPage.dart';
 import 'package:recytrack/UserRequestPage.dart';
+import 'package:recytrack/leaderboard.dart';
 
 class RedirectPage extends StatefulWidget {
   RedirectPage({required this.userId});
@@ -251,7 +252,7 @@ class HomeScreenUser extends StatelessWidget {
                   // padding: const EdgeInsets.only(left: 5,right: 5, top: 5, bottom: 5),
                   child:
                 
-                const Stack(
+                 Stack(
                     // alignment: Alignment.center,
                     fit: StackFit.expand,
                     children: [
@@ -303,7 +304,7 @@ class HomeScreenUser extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HistoryPage()),
+                    MaterialPageRoute(builder: (context) => LeaderboardPage()),
                   );
                 },child: 
                 
