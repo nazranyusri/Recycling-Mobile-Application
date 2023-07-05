@@ -64,19 +64,30 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             child: Column(
               children: [
                 TextFormField(
-                  // controller: fullNameController..text = fullName ?? '',
-                  initialValue: fullName,
-                  enabled: false,
-                  decoration: InputDecoration(
-                    labelText: 'Full Name',
-                  ),
-                ),
+                    // controller: fullNameController..text = fullName ?? '',
+                    initialValue: fullName,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: 'Full Name',
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                    )),
                 SizedBox(height: 16.0),
-                TextField(
+                TextFormField(
                   controller: usernameController..text = username ?? '',
+                  // initialValue: fullName,
+                  // enabled: true,
                   decoration: InputDecoration(
                     labelText: 'Username',
                   ),
+                  // style: username == null
+                  //     ? TextStyle(
+                  //         color: Colors.black,
+                  //       )
+                  //     : TextStyle(
+                  //         color: Colors.black,
+                  //       )
                 ),
                 SizedBox(height: 16.0),
                 TextField(
@@ -86,17 +97,24 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   ),
                 ),
                 SizedBox(height: 16.0),
-                TextField(
+                TextFormField(
                   controller: locationController..text = location ?? '',
+                  // initialValue: location,
                   decoration: InputDecoration(
                     labelText: 'Location',
                   ),
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: _updateProfile,
-                  child: Text('Update'),
-                ),
+                    onPressed: _updateProfile,
+                    child: Text('Update'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      onPrimary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    )),
               ],
             ),
           );
