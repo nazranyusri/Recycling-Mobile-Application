@@ -1,7 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recytrack/HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:recytrack/services/dbRequest.dart';
 
 class UserRequestPage extends StatefulWidget {
   @override
@@ -9,187 +10,148 @@ class UserRequestPage extends StatefulWidget {
 }
 
 class _UserRequestPageState extends State<UserRequestPage> {
-  List<Map<String, dynamic>> dataFromDatabase = [];
-  
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _telNoController = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+  void initState() {
+    super.initState();
+    initializeFirebase();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchData();
-  // }
+  Future<void> initializeFirebase() async {
+    await Firebase.initializeApp();
+  }
 
-  // Future<void> fetchData() async {
-  //   dbPickup db = dbPickup();
-  //   List<Map<String, dynamic>> pickupData = await db.getPickupData();
-  //   setState(() {
-  //     dataFromDatabase = pickupData;
-  //   });
-  // }
+  Future<String> getUsername(String userID) async {
+    final userDoc = await FirebaseFirestore.instance.collection('users').doc(userID).get();
+    return userDoc.data()?['username'] ?? 'No username';
+  }
 
-  // Function to show confirmation dialog
-  // Future<void> showConfirmationDialog(String id) async {
-  //   return showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Confirm Update'),
-  //         content: Text('Are you sure you want to update the approval status?'),
-  //         actions: [
-  //           TextButton(
-  //             child: Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text('Update'),
-  //             onPressed: () {
-  //               dbPickup db = dbPickup();
-  //               db.updateStatus(id);
-  //               Navigator.of(context).pop();
-  //               fetchData(); // Fetch data again after update
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   List<Map<String, dynamic>> pendingApprovalData = dataFromDatabase.where((data) => data['status'] == false).toList();
-  //   List<Map<String, dynamic>> approvedData = dataFromDatabase.where((data) => data['status'] == true).toList();
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
 
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       centerTitle: true,
-  //       backgroundColor: Colors.transparent,
-  //       elevation: 0,
-  //       title: Text(
-  //         'Request Pickup',
-  //         style: TextStyle(color: Colors.black),
-  //       ),
-  //       leading: IconButton(
-  //         icon: Icon(
-  //           Icons.arrow_back,
-  //           color: Colors.black,
-  //         ),
-  //         onPressed: () {
-  //           Navigator.of(context).pushAndRemoveUntil(
-  //             MaterialPageRoute(builder: (context) => HomePageUser()),
-  //             (route) => false,
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //     body: SingleChildScrollView(
-  //       child: Center(
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             Container(
-  //               padding: EdgeInsets.all(16),
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Text(
-  //                     'Pending Approval',
-  //                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  //                   ),
-  //                   SizedBox(height: 8),
-  //                   Container(
-  //                     child: pendingApprovalData.isNotEmpty
-  //       //                   ? Column(
-  //                             children: pendingApprovalData.map((data) {
-  //                               return Card(
-  //                                 child: ListTile(
-  //                                   title: Text(data['location'], style: TextStyle(fontWeight: FontWeight.bold)),
-  //                                   subtitle: Column(
-  //                                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                                     children: [
-  //                                       Text(data['date']),
-  //                                       Text(data['time']),
-  //                                     ],
-  //                                   ),
-  //                                   trailing: IconButton(
-  //                                     icon: Icon(Icons.check),
-  //                                     onPressed: () {
-  //                                       showConfirmationDialog(data['id']);
-  //                                     },
-  //                                   ),
-  //                                 ),
-  //                               );
-  //                             }).toList(),
-  //                           )
-  //                         : Container(
-  //                             width: double.infinity,
-  //                             height: 80,
-  //                             padding: EdgeInsets.symmetric(horizontal: 16),
-  //                             alignment: Alignment.center,
-  //                             decoration: BoxDecoration(
-  //                               border: Border.all(color: Theme.of(context).dividerColor),
-  //                               borderRadius: BorderRadius.circular(8),
-  //                             ),
-  //                             child: Text(
-  //                               'No pending approval',
-  //                               style: TextStyle(fontWeight: FontWeight.bold),
-  //                             ),
-  //                           ),
-  //                   ),
-  //                   SizedBox(height: 32),
-  //                   Text(
-  //                     'Approved Request',
-  //                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  //                   ),
-  //                   SizedBox(height: 8),
-  //                   Container(
-  //                     child: approvedData.isNotEmpty
-  //       //                   ? Column(
-  //                             children: approvedData.map((data) {
-  //                               int telno = data['telno'];
-  //                               return Card(
-  //                                 child: ListTile(
-  //                                   title: Text(data['location'], style: TextStyle(fontWeight: FontWeight.bold)),
-  //                                   subtitle: Column(
-  //                                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                                     children: [
-  //                                       Text(data['date']),
-  //                                       Text(data['time']),
-  //                                     ],
-  //                                   ),
-  //                                   trailing: Text('0$telno'),
-  //                                 ),
-  //                               );
-  //                             }).toList(),
-  //                           )
-  //                         : Container(
-  //                             width: double.infinity,
-  //                             height: 80,
-  //                             padding: EdgeInsets.symmetric(horizontal: 16),
-  //                             alignment: Alignment.center,
-  //                             decoration: BoxDecoration(
-  //                               border: Border.all(color: Theme.of(context).dividerColor),
-  //                               borderRadius: BorderRadius.circular(8),
-  //                             ),
-  //                             child: Text(
-  //                               'No pending approval',
-  //                               style: TextStyle(fontWeight: FontWeight.bold),
-  //                             ),
-  //                           ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Request Pickup',
+          style: TextStyle(color: Colors.black),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePageUser()),
+              (route) => false,
+            );
+          },
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _dateController,
+                  decoration: InputDecoration(labelText: 'Date'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a date';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _timeController,
+                  decoration: InputDecoration(labelText: 'Time'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a time';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _locationController,
+                  decoration: InputDecoration(labelText: 'Location'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a location';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _telNoController,
+                  decoration: InputDecoration(labelText: 'Telephone Number'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a telephone number';
+                    }
+                    return null;
+                  },
+                ),
+               ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    final userID = user?.uid;
+                    if (userID != null) {
+                      final username = await getUsername(userID);
+                      print('Username: $username');  // This will print the username
+                      try {
+                        final pickupCollection = FirebaseFirestore.instance.collection('pickup');
+                        final documentRef = pickupCollection.doc(username);
+                        await documentRef.set({
+                          'date': _dateController.text,
+                          'time': _timeController.text,
+                          'location': _locationController.text,
+                          'status': false,
+                          'telno': _telNoController.text,
+                          'username': username,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Pickup request submitted'),
+                          ),
+                        );
+                        _formKey.currentState!.reset();
+                      } catch (error) {
+                        print('Failed to submit pickup request: $error');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to submit pickup request'),
+                          ),
+                        );
+                      }
+                    }
+                  }
+                },
+
+                child: Text('Submit Request'),
+              ),
+
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
