@@ -152,7 +152,7 @@ class _RecyclePageState extends State<RecyclePage> {
           Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              'Item List Description',
+              'Item List Descriptions',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
