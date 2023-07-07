@@ -22,6 +22,7 @@ class _RequestPageState extends State<RequestPage> {
     List<Map<String, dynamic>> pickupData = await db.getPickupData();
     setState(() {
       dataFromDatabase = pickupData;
+      print(dataFromDatabase);
     });
   }
 
@@ -146,7 +147,7 @@ class _RequestPageState extends State<RequestPage> {
                       child: approvedData.isNotEmpty
                           ? Column(
                               children: approvedData.map((data) {
-                                int telno = data['telno'];
+                                String telno = data['telno'];
                                 return Card(
                                   child: ListTile(
                                     title: Text(data['location'], style: TextStyle(fontWeight: FontWeight.bold)),
@@ -157,7 +158,7 @@ class _RequestPageState extends State<RequestPage> {
                                         Text(data['time']),
                                       ],
                                     ),
-                                    trailing: Text('0$telno'),
+                                    trailing: Text('$telno'),
                                   ),
                                 );
                               }).toList(),

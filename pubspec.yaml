@@ -38,6 +38,7 @@ dependencies:
   firebase_auth: ^4.6.2
   cloud_firestore: ^4.7.1
   firebase_core: ^2.3.0
+  stripe_payment: ^1.1.4
   
 dev_dependencies:
   flutter_test:
@@ -64,7 +65,7 @@ flutter:
     - assets/images/wmsp_homepage_button1.jpg
     - assets/images/wmsp_homepage_button2.jpeg
     - assets/images/wmsp_homepage_button3.jpg
-
+    - assets/images/leaderboard.png
   fonts:
     - family: Montserrat
       fonts:

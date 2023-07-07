@@ -63,10 +63,8 @@ class ProfilePage extends StatelessWidget {
                         return CircularProgressIndicator();
                       }
 
-                      final userData =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      //               final fullName = userData['full_name'] as String?;
-                      // final username = userData['username'] as String?;
+                    final userData =
+                        snapshot.data!.data() as Map<String, dynamic>;
 
                       return Container(
                         width: 400,
