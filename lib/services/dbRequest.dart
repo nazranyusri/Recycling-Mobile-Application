@@ -18,7 +18,7 @@ class dbPickup {
         Map<String, dynamic>? data = doc.data();
 
         String id = doc.id;
-        int telno = data['telno'];
+        String telno = data['telno'];
         String location = data['location'] ?? '';
         String date = data['date'] ?? '';
         String time = data['time'] ?? '';

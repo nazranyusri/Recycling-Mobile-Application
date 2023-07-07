@@ -133,8 +133,15 @@ class _HomePageState1 extends State<HomePageUser> {
 
   @override
   Widget build(BuildContext context) {
-    double totalWeights = calculateTotalWeight(recycleHistory!);
-    double totalMoney = calculateTotalMoney(recycleHistory!);
+    // double totalWeights = calculateTotalWeight(recycleHistory!);
+    // double totalMoney = calculateTotalMoney(recycleHistory!);
+
+    double totalWeights = 0;
+    double totalMoney = 0;
+    if (recycleHistory != null ){
+     totalWeights = calculateTotalWeight(recycleHistory!);
+     totalMoney = calculateTotalMoney(recycleHistory!);
+    }
 
     return WillPopScope(
       onWillPop: () async {

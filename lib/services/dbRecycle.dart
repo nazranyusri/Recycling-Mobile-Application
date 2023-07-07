@@ -103,27 +103,28 @@ class dbRecycle{
 
     return cumulativeWeights;
   }
-Future<List<Map<String, dynamic>>> getUserTotalWeight(String userId) async {
-  List<Map<String, dynamic>> userTotalWeights = [];
+  
+  Future<List<Map<String, dynamic>>> getUserTotalWeight(String userId) async {
+    List<Map<String, dynamic>> userTotalWeights = [];
 
-  try {
-    final CollectionReference recycleCollection = FirebaseFirestore.instance.collection('recycle');
+    try {
+      final CollectionReference recycleCollection = FirebaseFirestore.instance.collection('recycle');
 
-    QuerySnapshot snapshot = await recycleCollection.doc(userId).collection('data').get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs.map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>).toList();
+      QuerySnapshot snapshot = await recycleCollection.doc(userId).collection('data').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.docs.map((doc) => doc as QueryDocumentSnapshot<Map<String, dynamic>>).toList();
 
-    // Calculate the total weights for the specific user
-    double totalWeight = 0;
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents) {
-      double weight = doc.get('weight') as double;
-      totalWeight += weight;
+      // Calculate the total weights for the specific user
+      double totalWeight = 0;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in documents) {
+        double weight = doc.get('weight') as double;
+        totalWeight += weight;
+      }
+
+      userTotalWeights.add({'totalWeight': totalWeight});
+    } catch (error) {
+      print('Error retrieving user total weights: $error');
     }
 
-    userTotalWeights.add({'totalWeight': totalWeight});
-  } catch (error) {
-    print('Error retrieving user total weights: $error');
+    return userTotalWeights;
   }
-
-  return userTotalWeights;
-}
 }
