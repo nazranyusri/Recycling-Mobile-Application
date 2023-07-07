@@ -14,7 +14,6 @@ import 'package:recytrack/UserRequestPage.dart';
 import 'package:recytrack/leaderboard.dart';
 import 'package:recytrack/HistoryHelper.dart';
 
-
 class RedirectPage extends StatefulWidget {
   RedirectPage({required this.userId});
 
@@ -77,10 +76,13 @@ class _HomePageState1 extends State<HomePageUser> {
   late PageController _pageController;
 
   Future<bool> getPickupStatus(String username) async {
-  final pickupDoc = await FirebaseFirestore.instance.collection('pickup').doc(username).get();
-  return pickupDoc.exists && pickupDoc.data()?['status'] == false;
-}
-  
+    final pickupDoc = await FirebaseFirestore.instance
+        .collection('pickup')
+        .doc(username)
+        .get();
+    return pickupDoc.exists && pickupDoc.data()?['status'] == false;
+  }
+
   Future<void> fetchRecycleHistory() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -88,10 +90,8 @@ class _HomePageState1 extends State<HomePageUser> {
         CollectionReference recycleCollection =
             FirebaseFirestore.instance.collection('recycle');
 
-        QuerySnapshot querySnapshot = await recycleCollection
-            .doc(user.email)
-            .collection('data')
-            .get();
+        QuerySnapshot querySnapshot =
+            await recycleCollection.doc(user.email).collection('data').get();
 
         List<Map<String, dynamic>> history = querySnapshot.docs
             .map((doc) => doc.data() as Map<String, dynamic>)
@@ -102,8 +102,7 @@ class _HomePageState1 extends State<HomePageUser> {
         });
       }
     } catch (error) {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -138,9 +137,9 @@ class _HomePageState1 extends State<HomePageUser> {
 
     double totalWeights = 0;
     double totalMoney = 0;
-    if (recycleHistory != null ){
-     totalWeights = calculateTotalWeight(recycleHistory!);
-     totalMoney = calculateTotalMoney(recycleHistory!);
+    if (recycleHistory != null) {
+      totalWeights = calculateTotalWeight(recycleHistory!);
+      totalMoney = calculateTotalMoney(recycleHistory!);
     }
 
     return WillPopScope(
@@ -180,7 +179,8 @@ class _HomePageState1 extends State<HomePageUser> {
             controller: _pageController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              HomeScreenUser(totalWeights: totalWeights, totalMoney: totalMoney),
+              HomeScreenUser(
+                  totalWeights: totalWeights, totalMoney: totalMoney),
               RecyclePage(),
               HistoryPage(),
               ProfilePage(),
@@ -225,25 +225,29 @@ class HomeScreenUser extends StatelessWidget {
   const HomeScreenUser({required this.totalWeights, required this.totalMoney});
 
   Future<bool> getPickupStatus(String username) async {
-      final pickupDoc = await FirebaseFirestore.instance.collection('pickup').doc(username).get();
-      return pickupDoc.exists && pickupDoc.data()?['status'] == false;
-    }
-        Future<String> getUsername(String userID) async {
-    final userDoc = await FirebaseFirestore.instance.collection('users').doc(userID).get();
+    final pickupDoc = await FirebaseFirestore.instance
+        .collection('pickup')
+        .doc(username)
+        .get();
+    return pickupDoc.exists && pickupDoc.data()?['status'] == false;
+  }
+
+  Future<String> getUsername(String userID) async {
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userID).get();
     return userDoc.data()?['username'] ?? 'No username';
   }
-  
+
   @override
   Widget build(BuildContext context) {
     User? firebaseUser = FirebaseAuth.instance.currentUser;
-  Future<String> username = getUsername(firebaseUser!.uid);
-  Future<bool> pickupStatus = username.then((username) => getPickupStatus(username));
+    Future<String> username = getUsername(firebaseUser!.uid);
+    Future<bool> pickupStatus =
+        username.then((username) => getPickupStatus(username));
     return SingleChildScrollView(
       child: Column(
-        
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          
           Container(
             height: 75,
             color: Color.fromARGB(240, 240, 240, 240),
@@ -275,7 +279,6 @@ class HomeScreenUser extends StatelessWidget {
               ],
             ),
           ),
-
           Container(
             height: 200,
             color: Colors.green,
@@ -287,8 +290,8 @@ class HomeScreenUser extends StatelessWidget {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 15,right: 15, top: 15, bottom: 15),
-                  
+                  padding: const EdgeInsets.only(
+                      left: 15, right: 15, top: 15, bottom: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -301,10 +304,8 @@ class HomeScreenUser extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => HistoryPage()),
                   );
-                },child: 
-                
-                
-                 Container(
+                },
+                child: Container(
                   width: 150,
                   height: 150,
                   padding: EdgeInsetsDirectional.all(0),
@@ -320,7 +321,8 @@ class HomeScreenUser extends StatelessWidget {
                     children: [
                       CircularProgressIndicator(
                         value: 0.9,
-                        valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(0, 221, 52, 1)),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Color.fromRGBO(0, 221, 52, 1)),
                         backgroundColor: Colors.grey,
                         strokeWidth: 10,
                       ),
@@ -373,14 +375,18 @@ class HomeScreenUser extends StatelessWidget {
                       ),
                     ],
                   ),
-                 ),
+                ),
               ),
 
               // Leaderboard
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 15,right: 15, top: 15, bottom: 15),
-                  
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                    top: 15,
+                    bottom: 15,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -391,62 +397,49 @@ class HomeScreenUser extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LeaderboardPage()),
+                    MaterialPageRoute(
+                      builder: (context) => LeaderboardPage(),
+                    ),
                   );
-                },child: 
-                
-                
-                 Container(
+                },
+                child: Container(
                   width: 150,
                   height: 150,
                   padding: EdgeInsetsDirectional.all(0),
                   margin: EdgeInsetsDirectional.all(0),
-                  // decoration: BoxDecoration(
-                  //   color: Colors.white,
-                  //   borderRadius: BorderRadius.circular(20),
-                  // ),
-                  // padding: const EdgeInsets.only(left: 5,right: 5, top: 5, bottom: 5),
-                  child:
-                
-                const Text(
-                    'test'
-                    // alignment: Alignment.center,
-                    // fit: StackFit.expand,
-                    // children: [
-                      
-                    //   CircularProgressIndicator(
-                    //     value: 0.9, // Set the progress value here
-                    //     valueColor: AlwaysStoppedAnimation<Color>(
-                    //         Color.fromRGBO(0, 221, 52, 1)),
-                    //     backgroundColor: Colors.grey,
-                    //     strokeWidth: 10,
-                    //   ),
-                      
-                    //   Icon(
-                    //     Icons.check,
-                    //     size: 50,
-                    //     color: Color.fromARGB(255, 0, 107, 25),
-                    //   ),
-                    //   Positioned(
-                    //     bottom: 10,
-                    //     child: Text(
-                    //       '9/10 '
-                    //       'items recycled',
-                    //       style: TextStyle(
-                    //         color: Color.fromRGBO(0, 54, 18, 1),
-                    //         fontSize: 15,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ],
-                    
+                  child: Stack(
+                    alignment: Alignment.center,
+                    fit: StackFit.expand,
+                    children: [
+                      ClipOval(
+                        child: Image.asset(
+                          'assets/images/leaderboard.png', // Replace with your image asset path
+                          width: 60,
+                          height: 70,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Leaderboard',
+                              style: TextStyle(
+                                color: Color.fromRGBO(0, 54, 18, 1),
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                 ),
+                ),
               ),
             ],
           ),
-
           Center(
             child: Container(
               margin: EdgeInsetsDirectional.all(10),
@@ -454,15 +447,18 @@ class HomeScreenUser extends StatelessWidget {
                 future: pickupStatus,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();  // Show loading indicator while waiting for data
+                    return CircularProgressIndicator(); // Show loading indicator while waiting for data
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');  // Show error message if there's an error
+                    return Text(
+                        'Error: ${snapshot.error}'); // Show error message if there's an error
                   } else {
                     String buttonText;
                     if (snapshot.data == true) {
-                      buttonText = 'You have a pending Pickup Request';  // Show 'Pickup Pending' if pickup status is true
+                      buttonText =
+                          'You have a pending Pickup Request'; // Show 'Pickup Pending' if pickup status is true
                     } else {
-                      buttonText = 'Request Waste Pickup';  // Show 'Request Waste Pickup' otherwise
+                      buttonText =
+                          'Request Waste Pickup'; // Show 'Request Waste Pickup' otherwise
                     }
 
                     Widget textWidget;
@@ -497,7 +493,8 @@ class HomeScreenUser extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => UserRequestPage()),
+                          MaterialPageRoute(
+                              builder: (context) => UserRequestPage()),
                         );
                       },
                       child: Container(
@@ -506,7 +503,8 @@ class HomeScreenUser extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                            image: AssetImage('assets/images/wmsp_homepage_button2.jpeg'),
+                            image: AssetImage(
+                                'assets/images/wmsp_homepage_button2.jpeg'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -516,7 +514,8 @@ class HomeScreenUser extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                color: Color.fromARGB(76, 108, 196, 74), // Set the background color of the container
+                                color: Color.fromARGB(76, 108, 196,
+                                    74), // Set the background color of the container
                                 child: textWidget,
                               ),
                             ],
@@ -528,81 +527,76 @@ class HomeScreenUser extends StatelessWidget {
                 },
               ),
             ),
-
-
-        ),
-
+          ),
           Container(
             margin: const EdgeInsets.only(top: 10, bottom: 20),
             padding: EdgeInsets.only(top: 10, bottom: 10),
             color: Colors.green,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                    children:[
-              // color: Colors.green[900],
-              // Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // color: Colors.green[900],
+                // Container(
                 // ColoredBox(
                 //   color: Colors.green[900],
-                      const Text(
-                            'Find the Recycling Centres',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        //  ),  
-                    Container(
-                      //button
-                      // padding: EdgeInsets.only(left: 75, top: 15),
-                      margin: EdgeInsets.only(left: 20),
-                      child: ElevatedButton(
-                        //backgroundcolor
-                        style: ElevatedButton.styleFrom(
-                          primary: Color.fromRGBO(0, 121, 46, 1),
-                        ),
-                        child: Text('Explore Map'),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => LocationPage()),
-                          );
-                        },
-
-                      ),
+                const Text(
+                  'Find the Recycling Centres',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                //  ),
+                Container(
+                  //button
+                  // padding: EdgeInsets.only(left: 75, top: 15),
+                  margin: EdgeInsets.only(left: 20),
+                  child: ElevatedButton(
+                    //backgroundcolor
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromRGBO(0, 121, 46, 1),
                     ),
-                  ],
+                    child: Text('Explore Map'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LocationPage()),
+                      );
+                    },
+                  ),
+                ),
+              ],
               //   ),
               // ),
-                
-            
+
               // Card(
               //   color: Color.fromARGB(255, 0, 24, 1),
               //   child: Padding(
               //     padding: const EdgeInsets.all(50.0),
 
-                //       child: Column(
-                //         children: [
-                //           const Text(
-                //             'Find the Recycling Centres',
-                //             style: TextStyle(
-                //               fontSize: 16,
-                //               fontWeight: FontWeight.bold,
-                //               color: Colors.white,
-                //             ),
-                //           ),
-                //           ElevatedButton(
-                //             child: const Text('Explore Map'),
-                //             onPressed: () {
-                //               LocationPage();
-                //             }
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                  // ),
-                  ),
-                ), 
+              //       child: Column(
+              //         children: [
+              //           const Text(
+              //             'Find the Recycling Centres',
+              //             style: TextStyle(
+              //               fontSize: 16,
+              //               fontWeight: FontWeight.bold,
+              //               color: Colors.white,
+              //             ),
+              //           ),
+              //           ElevatedButton(
+              //             child: const Text('Explore Map'),
+              //             onPressed: () {
+              //               LocationPage();
+              //             }
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              // ),
+            ),
+          ),
         ],
       ),
     );
