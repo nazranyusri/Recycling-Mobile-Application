@@ -242,8 +242,7 @@ class HomeScreenUser extends StatelessWidget {
   Widget build(BuildContext context) {
     User? firebaseUser = FirebaseAuth.instance.currentUser;
     Future<String> username = getUsername(firebaseUser!.uid);
-    Future<bool> pickupStatus =
-        username.then((username) => getPickupStatus(username));
+    Future<bool> pickupStatus = username.then((username) => getPickupStatus(username));
     return SingleChildScrollView(
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -254,17 +253,22 @@ class HomeScreenUser extends StatelessWidget {
             child: Row(
               // crossAxisAlignment:CrossAxisAlignment.center,
               children: [
-                Container(
-                    padding: EdgeInsets.only(left: 10, top: 10),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, top: 25),
                     child: Text(
                       'Hi, User!',
-                      style: TextStyle(fontSize: 25),
-                    )),
-                Container(
-                    //button
-                    padding: EdgeInsets.only(left: 75, top: 15),
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold
+                        ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(top: 25, right: 10),
                     child: ElevatedButton(
-                      //backgroundcolor
                       style: ElevatedButton.styleFrom(
                         primary: Color.fromRGBO(0, 121, 46, 1),
                       ),
@@ -272,274 +276,242 @@ class HomeScreenUser extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => SubscribePage()),
+                          MaterialPageRoute(builder: (context) => SubscribePage()),
                         );
                       },
-                    )),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          Container(
-            height: 200,
-            color: Colors.green,
-            // child: HomeScreen()
-            child: const Center(child: Text('Banner')),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.only(
-                      left: 15, right: 15, top: 15, bottom: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  fixedSize: Size(180, 180),
-                  shadowColor: Colors.green[750],
-                  primary: Color.fromRGBO(243, 243, 243, 0.995),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HistoryPage()),
-                  );
-                },
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  padding: EdgeInsetsDirectional.all(0),
-                  margin: EdgeInsetsDirectional.all(0),
-                  // decoration: BoxDecoration(
-                  //   color: Colors.white,
-                  //   borderRadius: BorderRadius.circular(20),
-                  // ),
-                  // padding: const EdgeInsets.only(left: 5,right: 5, top: 5, bottom: 5),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.expand,
-                    children: [
-                      CircularProgressIndicator(
-                        value: 0.9,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Color.fromRGBO(0, 221, 52, 1)),
-                        backgroundColor: Colors.grey,
-                        strokeWidth: 10,
-                      ),
-                      // Icon(
-                      //   Icons.check,
-                      //   size: 50,
-                      //   color: Color.fromARGB(255, 0, 107, 25),
-                      // ),
-                      Positioned(
-                        bottom: 10,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Total Weights',
-                              style: TextStyle(
-                                color: Color.fromRGBO(0, 54, 18, 1),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              totalWeights.toStringAsFixed(2),
-                              style: TextStyle(
-                                color: Color.fromRGBO(0, 54, 18, 1),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              'Total Money Earned',
-                              style: TextStyle(
-                                color: Color.fromRGBO(0, 54, 18, 1),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              '\$${totalMoney.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                color: Color.fromRGBO(0, 54, 18, 1),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Leaderboard
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    right: 15,
-                    top: 15,
-                    bottom: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  fixedSize: Size(180, 180),
-                  shadowColor: Colors.green[750],
-                  primary: Color.fromRGBO(243, 243, 243, 0.995),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LeaderboardPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  padding: EdgeInsetsDirectional.all(0),
-                  margin: EdgeInsetsDirectional.all(0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.expand,
-                    children: [
-                      ClipOval(
-                        child: Image.asset(
-                          'assets/images/leaderboard.png', // Replace with your image asset path
-                          width: 60,
-                          height: 70,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Leaderboard',
-                              style: TextStyle(
-                                color: Color.fromRGBO(0, 54, 18, 1),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Center(
+          Material(
+            elevation: 8, // Adjust the value as needed
             child: Container(
-              margin: EdgeInsetsDirectional.all(10),
-              child: FutureBuilder<bool>(
-                future: pickupStatus,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(); // Show loading indicator while waiting for data
-                  } else if (snapshot.hasError) {
-                    return Text(
-                        'Error: ${snapshot.error}'); // Show error message if there's an error
-                  } else {
-                    String buttonText;
-                    if (snapshot.data == true) {
-                      buttonText =
-                          'You have a pending Pickup Request'; // Show 'Pickup Pending' if pickup status is true
-                    } else {
-                      buttonText =
-                          'Request Waste Pickup'; // Show 'Request Waste Pickup' otherwise
-                    }
-
-                    Widget textWidget;
-                    if (snapshot.data == true) {
-                      textWidget = Center(
-                        child: Text(
-                          buttonText,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 20, 81, 7),
-                            fontSize: 20,
-                          ),
-                        ),
-                      );
-                    } else {
-                      textWidget = Text(
-                        buttonText,
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 51, 59, 49),
-                          fontSize: 20,
-                        ),
-                      );
-                    }
-
-                    return ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(245, 245, 245, 0.995),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        fixedSize: Size(350, 150),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserRequestPage()),
-                        );
-                      },
-                      child: Container(
-                        width: 300,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/images/wmsp_homepage_button2.jpeg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                color: Color.fromARGB(76, 108, 196,
-                                    74), // Set the background color of the container
-                                child: textWidget,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                },
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/wmsp_homepage_button1.jpg'),
+                  fit: BoxFit.cover,
+                  alignment: FractionalOffset(0.0, 1),
+                ),
               ),
             ),
           ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      fixedSize: Size(180, 180),
+                      shadowColor: Colors.green[750],
+                      primary: Color.fromRGBO(243, 243, 243, 0.995),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HistoryPage()),
+                      );
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      padding: EdgeInsetsDirectional.all(0),
+                      margin: EdgeInsetsDirectional.all(0),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.expand,
+                        children: [
+                          CircularProgressIndicator(
+                            value: 0.9,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromRGBO(0, 221, 52, 1),
+                            ),
+                            backgroundColor: Colors.grey,
+                            strokeWidth: 10,
+                          ),
+                          Positioned(
+                            bottom: 10,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Total Weights',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(0, 54, 18, 1),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  totalWeights.toStringAsFixed(2) + ' kg',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(0, 54, 18, 1),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Total Money Earned',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(0, 54, 18, 1),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'RM ${totalMoney.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(0, 54, 18, 1),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Recycle History',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
+              //kat sini
+              // Leaderboard
+              Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      fixedSize: Size(180, 180),
+                      shadowColor: Colors.green[750],
+                      primary: Color.fromRGBO(243, 243, 243, 0.995),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LeaderboardPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      padding: EdgeInsetsDirectional.all(0),
+                      margin: EdgeInsetsDirectional.all(0),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.expand,
+                        children: [
+                          ClipOval(
+                            child: Image.asset(
+                              'assets/images/leaderboard.png',
+                              width: 60,
+                              height: 70,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Leaderboard',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Center(
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserRequestPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    fixedSize: Size(370, 150),
+                    elevation: 4,
+                    primary: Colors.white,
+                    onPrimary: Colors.black,
+                  ),
+                  child: Container(
+                    width: 370,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/wmsp_homepage_button2.jpeg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Request Waste Pickup',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15),
           Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 20),
+            margin: const EdgeInsets.only(top: 10),
             padding: EdgeInsets.only(top: 10, bottom: 10),
             color: Colors.green,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // color: Colors.green[900],
-                // Container(
-                // ColoredBox(
-                //   color: Colors.green[900],
                 const Text(
                   'Find the Recycling Centres',
                   style: TextStyle(
@@ -548,10 +520,7 @@ class HomeScreenUser extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                //  ),
                 Container(
-                  //button
-                  // padding: EdgeInsets.only(left: 75, top: 15),
                   margin: EdgeInsets.only(left: 20),
                   child: ElevatedButton(
                     //backgroundcolor
@@ -568,34 +537,6 @@ class HomeScreenUser extends StatelessWidget {
                   ),
                 ),
               ],
-              //   ),
-              // ),
-
-              // Card(
-              //   color: Color.fromARGB(255, 0, 24, 1),
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(50.0),
-
-              //       child: Column(
-              //         children: [
-              //           const Text(
-              //             'Find the Recycling Centres',
-              //             style: TextStyle(
-              //               fontSize: 16,
-              //               fontWeight: FontWeight.bold,
-              //               color: Colors.white,
-              //             ),
-              //           ),
-              //           ElevatedButton(
-              //             child: const Text('Explore Map'),
-              //             onPressed: () {
-              //               LocationPage();
-              //             }
-              //           ),
-              //         ],
-              //       ),
-              //     ),
-              // ),
             ),
           ),
         ],

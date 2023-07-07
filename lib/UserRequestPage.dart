@@ -106,47 +106,44 @@ class _UserRequestPageState extends State<UserRequestPage> {
                     return null;
                   },
                 ),
-               ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final userID = user?.uid;
-                    if (userID != null) {
-                      final username = await getUsername(userID);
-                      print('Username: $username');  // This will print the username
-                      try {
-                        final pickupCollection = FirebaseFirestore.instance.collection('pickup');
-                        final documentRef = pickupCollection.doc(username);
-                        await documentRef.set({
-                          'date': _dateController.text,
-                          'time': _timeController.text,
-                          'location': _locationController.text,
-                          'status': false,
-                          'telno': _telNoController.text,
-                          'username': username,
-                        });
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      final userID = user?.uid;
+                      if (userID != null) {
+                        final username = await getUsername(userID);
+                        print('Username: $username');  // This will print the username
+                        try {
+                          final pickupCollection = FirebaseFirestore.instance.collection('pickup');
+                          final documentRef = pickupCollection.doc(username);
+                          await documentRef.set({
+                            'date': _dateController.text,
+                            'time': _timeController.text,
+                            'location': _locationController.text,
+                            'status': false,
+                            'telno': _telNoController.text,
+                            'username': username,
+                          });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Pickup request submitted'),
-                          ),
-                        );
-                        _formKey.currentState!.reset();
-                      } catch (error) {
-                        print('Failed to submit pickup request: $error');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to submit pickup request'),
-                          ),
-                        );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Pickup request submitted'),
+                            ),
+                          );
+                          _formKey.currentState!.reset();
+                        } catch (error) {
+                          print('Failed to submit pickup request: $error');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to submit pickup request'),
+                            ),
+                          );
+                        }
                       }
                     }
-                  }
-                },
-
-                child: Text('Submit Request'),
-              ),
-
-
+                  },
+                  child: Text('Submit Request'),
+                ),
               ],
             ),
           ),

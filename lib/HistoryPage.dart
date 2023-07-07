@@ -90,26 +90,26 @@ Widget build(BuildContext context) {
 
   return Scaffold(
     appBar: AppBar(
-      title: Text(
-        'Recycle History',
-        style: TextStyle(fontSize: 24),
-      ),
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Recycle History',
+          style: TextStyle(color: Colors.black),
         ),
-        onPressed: () {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => HomePageUser()),
-            (route) => false,
-          );
-        },
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePageUser()),
+              (route) => false,
+            );
+          },
+        ),
       ),
-      centerTitle: true,
-      elevation: 0.0,
-      backgroundColor: Colors.green,
-    ),
     body: errorMessage != null
         ? Center(
             child: Text(
@@ -121,37 +121,37 @@ Widget build(BuildContext context) {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Total Weights (kg)',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  Material(
+                    elevation: 8,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      width: double.infinity,
+                      color: Colors.green,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Total Weight: ' + totalWeights.toStringAsFixed(2) + ' kg',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Total Earned: RM ' + totalMoney.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          totalWeights.toStringAsFixed(2),
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Total Money Earned',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          '\$${totalMoney.toStringAsFixed(2)}',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   Expanded(
@@ -188,13 +188,13 @@ Widget build(BuildContext context) {
                               Text(
                                 'Entry $entryNumber',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              SizedBox(height: 4),
                               Text(
-                                'Total Earned: \$${paymentTotal.toStringAsFixed(2)}',
+                                'Total Earned: RM ${paymentTotal.toStringAsFixed(2)}',
                                 style: TextStyle(fontSize: 18),
                               ),
                               SizedBox(height: 16),
@@ -206,11 +206,29 @@ Widget build(BuildContext context) {
                                 children: [
                                   TableRow(
                                     children: [
-                                      TableCell(
-                                        child: Text('Type'),
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 8), // Adjust the padding value as needed
+                                        child: TableCell(
+                                          child: Text(
+                                            'Type',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                      TableCell(
-                                        child: Text('Weight (kg)'),
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 8), // Adjust the padding value as needed
+                                        child: TableCell(
+                                          child: Text(
+                                            'Weight (kg)',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),

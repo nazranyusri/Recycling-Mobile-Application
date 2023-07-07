@@ -154,7 +154,7 @@ class _RecyclePageState extends State<RecyclePage> {
             child: Text(
               'Item List Descriptions',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -163,7 +163,7 @@ class _RecyclePageState extends State<RecyclePage> {
             child: GridView.builder(
               padding: EdgeInsets.all(16),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
@@ -173,17 +173,23 @@ class _RecyclePageState extends State<RecyclePage> {
                   onTap: () {
                     _showDescription(context, itemNames[index], index);
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add your button onPressed logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      onPrimary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
                           _getIcon(itemNames[index]),
-                          size: 30,
+                          size: 60,
                         ),
                         SizedBox(height: 10),
                         Text(
