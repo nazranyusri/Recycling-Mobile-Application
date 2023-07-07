@@ -195,7 +195,8 @@ class LeaderboardPageState extends State<LeaderboardPage> {
                     child: Column(
                       children: [
                         CircleAvatar(
-                          // backgroundImage: AssetImage('assets/images/keng.jpg'),
+                          backgroundImage:
+                              AssetImage('assets/images/leaderboard.png'),
                           radius: 40,
                         ),
                         SizedBox(height: 10),
@@ -253,7 +254,7 @@ class LeaderboardPageState extends State<LeaderboardPage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Leaderboard",
+                    "Rankings",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
