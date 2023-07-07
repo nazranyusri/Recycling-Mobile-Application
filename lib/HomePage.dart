@@ -270,10 +270,11 @@ class HomeScreenUser extends StatelessWidget {
                       ),
                       child: Text('Become A Member Today'),
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => SubscribePage()),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SubscribePage()),
+                        );
                       },
                     )),
               ],
