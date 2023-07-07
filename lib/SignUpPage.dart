@@ -1,67 +1,177 @@
 import 'package:flutter/material.dart';
 import 'package:recytrack/loginPage.dart';
+import 'package:recytrack/services/firebase_helper.dart';
+// import 'package:recytrack/widgets/alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recytrack/services/validator.dart';
 
-class SignupPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _auth = FirebaseAuth.instance;
-  final fullName = TextEditingController(); // Updated variable declaration
-  final email = TextEditingController(); // Updated variable declaration
-  final contactNo = TextEditingController(); // Updated variable declaration
-  final location = TextEditingController(); // Updated variable declaration
-  final username = TextEditingController(); // Updated variable declaration
-  final password = TextEditingController(); // Updated variable declaration
-  bool showSpinner = false;
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _contactNoController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _validator = Validator();
+  bool _showSpinner = false;
+
+void showCustomAlertDialog(BuildContext context, String title, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.red,
+          ),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   Future<void> _createUserWithEmailAndPassword() async {
-    final String fullNameText = fullName.text;
-    final String emailText = email.text;
-    final String contactNoText = contactNo.text;
-    final String locationText = location.text;
-    final String usernameText = username.text;
-    final String passwordText = password.text;
-
-    print(
-        'Add $fullNameText $emailText $contactNoText $locationText $usernameText $passwordText into the debug console');
+    final fullName = _fullNameController.text.trim();
+    final email = _emailController.text.trim();
+    final contactNo = _contactNoController.text.trim();
+    final location = _locationController.text.trim();
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text;
 
     setState(() {
-      showSpinner = true;
+      _showSpinner = true;
     });
+
+    final validationMessage = _validator.validateFields(
+      fullName: fullName,
+      email: email,
+      contactNo: contactNo,
+      location: location,
+      username: username,
+      password: password,
+    );
+
+    if (validationMessage != null) {
+      showCustomAlertDialog(context, 'Uh-oh...', validationMessage);
+      setState(() {
+        _showSpinner = false;
+      });
+      return;
+    }
+
+    final emailAlreadyRegistered = await FirebaseHelper.isEmailAlreadyRegistered(email);
+    if (emailAlreadyRegistered) {
+      showCustomAlertDialog(context, 'Uh-oh...', 'Email already registered.');
+      setState(() {
+        _showSpinner = false;
+      });
+      return;
+    }
 
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
-        email: emailText,
-        password: passwordText,
+        email: email,
+        password: password,
       );
 
       if (newUser != null) {
-        // Add additional user info to Firestore
         final userCollection = FirebaseFirestore.instance.collection('users');
         final user = _auth.currentUser;
 
         await userCollection.doc(user!.uid).set({
-          'uid': user.uid, // Store the UID in the document
-          'full_name': fullNameText,
-          'email': emailText,
-          'contact_no': contactNoText,
-          'location': locationText,
-          'username': usernameText,
-          'role': 'user', // Assigning role as "user"
+          'uid': user.uid,
+          'full_name': fullName,
+          'email': email,
+          'contact_no': contactNo,
+          'location': location,
+          'username': username,
+          'role': 'user',
+          'member': 'true',
+          'points': '0'
         });
 
-        Navigator.pushNamed(context, 'login_screen');
-      }
-    } catch (e) {
+        showDialog(
+  context: context,
+  builder: (BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        'Registration Successful',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Colors.green,
+        ),
+      ),
+      content: Text(
+        'You have successfully registered.',
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text(
+            'OK',
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.pushReplacementNamed(context, 'login_screen');
+          },
+        ),
+      ],
+    );
+  });}}      
+     catch (e) {
       print(e);
     }
 
     setState(() {
-      showSpinner = false;
+      _showSpinner = false;
     });
   }
 
@@ -108,7 +218,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 30.0),
                   TextField(
-                    controller: fullName,
+                    controller: _fullNameController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -121,9 +231,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 17.0),
                   TextField(
-                    controller: email,
+                    controller: _emailController,
                     onChanged: (value) {
-                      //Do something with the user input.
+                      // Do something with the user input.
                     },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -137,7 +247,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 17.0),
                   TextField(
-                    controller: contactNo,
+                    controller: _contactNoController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -150,7 +260,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 17.0),
                   TextField(
-                    controller: location,
+                    controller: _locationController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -163,7 +273,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 17.0),
                   TextField(
-                    controller: username,
+                    controller: _usernameController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
@@ -176,9 +286,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   SizedBox(height: 17.0),
                   TextField(
-                    controller: password,
+                    controller: _passwordController,
                     onChanged: (value) {
-                      //Do something with the user input.
+                      // Do something with the user input.
                     },
                     obscureText: true,
                     decoration: InputDecoration(

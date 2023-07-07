@@ -6,3 +6,16 @@
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
+
+<application
+    android:label="recytrack"
+    android:icon="@mipmap/ic_launcher">
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyDRSEflEvKyzvpQ4zuda09JLK2vtvEp1zs"/>
+
+    <activity
+    android:name=".MainActivity">
+
+        

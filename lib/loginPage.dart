@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recytrack/SignupPage.dart';
+import 'package:recytrack/SignUpPage.dart';
 import 'package:recytrack/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -197,7 +197,7 @@ class _LoginDemoState extends State<LoginDemo> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SignupPage(),
+                                builder: (context) => SignUpPage(),
                               ),
                             );
                           },
