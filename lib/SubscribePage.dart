@@ -286,6 +286,10 @@ class _SubscribePageState extends State<SubscribePage> {
           ),
           SizedBox(height: 10.0),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green,
+              onPrimary: Colors.white,
+            ),
             child: Text('Subscribe'),
             onPressed: _subscribe,
           ),

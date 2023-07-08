@@ -145,7 +145,7 @@ class _HomePageState1 extends State<HomePageUser> {
 
     return Scaffold(
       appBar: _currentIndex == 0 ? AppBar(
-        title: Text("Hello!"),
+        title: Text("Recytrack"),
         backgroundColor: Color.fromRGBO(101, 145, 87, 1),
         actions: [
           Container(
@@ -296,42 +296,69 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     return userDoc.data()?['username'] ?? 'No username';
   }
 
-  Future <void> navigateToRequestPage() async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(currentUser.uid)
-              .get();
-      if (snapshot.exists) {
-        if (snapshot.get('member') == true) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UserRequestPage()),
-          );
-        } else if (snapshot.get('member') == false) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Subscription Required'),
-                content: Text(
-                    'This feature is only available for subscribed users.'),
-                actions: [
-                  TextButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        }
+ Future<void> navigateToRequestPage() async {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+    if (snapshot.exists) {
+      if (snapshot.get('member') == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserRequestPage()),
+        );
+      } else if (snapshot.get('member') == false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Subscription Required'),
+              content: Text(
+                'Seems like you have not subscribed to become a member.',
+              ),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Colors.white, // Set the background color
+              titleTextStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              contentTextStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              // You can customize the button color as well
+              // buttonColor: Colors.blue,
+              // buttonTextStyle: TextStyle(
+              //   color: Colors.white,
+              // ),
+              // Optionally, add an icon
+              icon: Icon(
+                Icons.warning,
+                color: Colors.red,
+                size: 40,
+              ),
+            );
+          },
+        );
       }
     }
+  }
+}
+
 
   // if (snapshot.get('member') == true) {
   //   Navigator.push(
@@ -357,7 +384,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
   //     },
   //   );
   // }
-}
+
 
 
 
