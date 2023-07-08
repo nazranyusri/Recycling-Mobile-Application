@@ -154,7 +154,7 @@ class _RecyclePageState extends State<RecyclePage> {
             child: Text(
               'Item List Descriptions',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -173,23 +173,17 @@ class _RecyclePageState extends State<RecyclePage> {
                   onTap: () {
                     _showDescription(context, itemNames[index], index);
                   },
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Add your button onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      onPrimary: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
                           _getIcon(itemNames[index]),
-                          size: 60,
+                          size: 30,
                         ),
                         SizedBox(height: 10),
                         Text(
