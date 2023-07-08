@@ -12,6 +12,7 @@ import 'package:recytrack/WMSP/wmsp_request.dart';
 import 'package:recytrack/LocationPage.dart';
 import 'package:recytrack/UserRequestPage.dart';
 import 'package:recytrack/leaderboard.dart';
+import 'package:recytrack/staffProfilePage.dart';
 import 'package:recytrack/HistoryHelper.dart';
 
 class RedirectPage extends StatefulWidget {
@@ -551,10 +552,11 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserRequestPage()),
-                    );
+                    navigateToRequestPage();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => UserRequestPage()),
+                    // );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -704,7 +706,7 @@ class _HomePageState2 extends State<HomePageStaff> {
               HomeScreenStaff(),
               WMSPRecyclePage(),
               RequestPage(),
-              ProfilePage(),
+              staffProfilePage(),
               // WMSPRecyclePage(),
             ],
           ),
