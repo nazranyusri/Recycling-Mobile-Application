@@ -32,4 +32,22 @@ class Validator {
         RegExp(r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$');
     return emailRegex.hasMatch(email);
   }
+
+
+   String? validateSubscribeFields({
+    required String cardNumber,
+    required String expMonth,
+    required String expYear,
+    required String cvc,
+  }) {
+    if (cardNumber.isEmpty ||
+        expMonth.isEmpty ||
+        expYear.isEmpty ||
+        cvc.isEmpty) {
+      return 'Please fill in all the fields.';
+    }
+    // Additional validation logic for card number, expiry, and cvc can be added here
+
+    return null; // Return null if all fields are valid
+  }
 }
