@@ -107,6 +107,9 @@ class _UserRequestPageState extends State<UserRequestPage> {
                   },
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                  ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       final userID = user?.uid;

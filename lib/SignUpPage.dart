@@ -122,8 +122,8 @@ void showCustomAlertDialog(BuildContext context, String title, String message) {
           'location': location,
           'username': username,
           'role': 'user',
-          'member': 'true',
-          'points': '0'
+          'member': false,
+          'points': 0
         });
 
         showDialog(

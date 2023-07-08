@@ -6,7 +6,7 @@ import 'package:recytrack/UpdateProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ProfilePage extends StatelessWidget {
+class staffProfilePage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: Color.fromARGB(0, 110, 109, 109),
         elevation: 0,
         title: Text(
-          'Profile',
+          'Staff Profile',
           style: TextStyle(color: Colors.black),
         ),
         leading: IconButton(
@@ -40,7 +40,7 @@ class ProfilePage extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => HomePageUser()),
+              MaterialPageRoute(builder: (context) => HomePageStaff()),
               (route) => false,
             );
           },
@@ -63,7 +63,7 @@ class ProfilePage extends StatelessWidget {
 
                       final userData =
                           snapshot.data!.data() as Map<String, dynamic>;
-                      final bool isMember = userData['member'];
+                      // final bool isMember = userData['member'];
 
                       return Container(
                         width: 400,
@@ -145,27 +145,27 @@ class ProfilePage extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 10),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Subscription    ',
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Flexible(
-                                        child: Text(
-                                          isMember ? 'ACTIVE' : 'Not Subscribed',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: isMember ? Colors.green : Colors.red,
-                                          ),
-                                          overflow: TextOverflow.visible,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                                  //   mainAxisAlignment: MainAxisAlignment.start,
+                                  //   children: [
+                                  //     Text(
+                                  //       'Subscription    ',
+                                  //       style: TextStyle(fontWeight: FontWeight.bold),
+                                  //     ),
+                                  //     SizedBox(width: 10),
+                                  //     Flexible(
+                                  //       child: Text(
+                                  //         isMember ? 'ACTIVE' : 'Not Subscribed',
+                                  //         style: TextStyle(
+                                  //           fontWeight: FontWeight.bold,
+                                  //           color: isMember ? Colors.green : Colors.red,
+                                  //         ),
+                                  //         overflow: TextOverflow.visible,
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   SizedBox(height: 10),
                                 ],
                               ),

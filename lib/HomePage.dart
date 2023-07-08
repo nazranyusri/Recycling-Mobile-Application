@@ -12,6 +12,7 @@ import 'package:recytrack/WMSP/wmsp_request.dart';
 import 'package:recytrack/LocationPage.dart';
 import 'package:recytrack/UserRequestPage.dart';
 import 'package:recytrack/leaderboard.dart';
+import 'package:recytrack/staffProfilePage.dart';
 import 'package:recytrack/HistoryHelper.dart';
 
 class RedirectPage extends StatefulWidget {
@@ -142,7 +143,29 @@ class _HomePageState1 extends State<HomePageUser> {
       totalMoney = calculateTotalMoney(recycleHistory!);
     }
 
-    return WillPopScope(
+    return Scaffold(
+      appBar: _currentIndex == 0 ? AppBar(
+        title: Text("Recytrack"),
+        backgroundColor: Color.fromRGBO(101, 145, 87, 1),
+        actions: [
+          Container(
+            padding: EdgeInsets.only(top: 10, right: 10, bottom: 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromRGBO(0, 121, 46, 1),
+              ),
+              child: Text('Become A Member Today'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SubscribePage()),
+                );
+              },
+            ),
+          ),
+        ],
+      ) :null,
+      body: WillPopScope(
       onWillPop: () async {
         if (_currentIndex != 0) {
           setState(() {
@@ -214,15 +237,50 @@ class _HomePageState1 extends State<HomePageUser> {
           ],
         ),
       ),
+    )
+
+      
     );
+    
+    
+    
   }
 }
 
-class HomeScreenUser extends StatelessWidget {
+class HomeScreenUser extends StatefulWidget {
   final double totalWeights;
   final double totalMoney;
 
   const HomeScreenUser({required this.totalWeights, required this.totalMoney});
+
+  @override
+  _HomeScreenUserState createState() => _HomeScreenUserState();
+}
+
+class _HomeScreenUserState extends State<HomeScreenUser> {
+  bool isSubscribed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // checkSubscriptionStatus();
+  }
+
+//   Future<void> checkSubscriptionStatus() async {
+//   User? currentUser = FirebaseAuth.instance.currentUser;
+//   if (currentUser != null) {
+//     DocumentSnapshot<Map<String, dynamic>> snapshot =
+//         await FirebaseFirestore.instance
+//             .collection('users')
+//             .doc(currentUser.uid)
+//             .get();
+//     if (snapshot.exists) {
+//       setState(() {
+//         isSubscribed = snapshot.get('member') ?? false;
+//       });
+//     }
+//   }
+// }
 
   Future<bool> getPickupStatus(String username) async {
     final pickupDoc = await FirebaseFirestore.instance
@@ -238,6 +296,98 @@ class HomeScreenUser extends StatelessWidget {
     return userDoc.data()?['username'] ?? 'No username';
   }
 
+ Future<void> navigateToRequestPage() async {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+    if (snapshot.exists) {
+      if (snapshot.get('member') == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserRequestPage()),
+        );
+      } else if (snapshot.get('member') == false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Subscription Required'),
+              content: Text(
+                'Seems like you have not subscribed to become a member.',
+              ),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Colors.white, // Set the background color
+              titleTextStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              contentTextStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              // You can customize the button color as well
+              // buttonColor: Colors.blue,
+              // buttonTextStyle: TextStyle(
+              //   color: Colors.white,
+              // ),
+              // Optionally, add an icon
+              icon: Icon(
+                Icons.warning,
+                color: Colors.red,
+                size: 40,
+              ),
+            );
+          },
+        );
+      }
+    }
+  }
+}
+
+
+  // if (snapshot.get('member') == true) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => UserRequestPage()),
+  //   );
+  // } else {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Subscription Required'),
+  //         content: Text('This feature is only available for subscribed users.'),
+  //         actions: [
+  //           TextButton(
+  //             child: Text('OK'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     User? firebaseUser = FirebaseAuth.instance.currentUser;
@@ -247,44 +397,7 @@ class HomeScreenUser extends StatelessWidget {
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
-            height: 75,
-            color: Color.fromARGB(240, 240, 240, 240),
-            child: Row(
-              // crossAxisAlignment:CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, top: 25),
-                    child: Text(
-                      'Hi, User!',
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold
-                        ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 25, right: 10),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(0, 121, 46, 1),
-                      ),
-                      child: Text('Become A Member Today'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SubscribePage()),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          
           Material(
             elevation: 8, // Adjust the value as needed
             child: Container(
@@ -357,7 +470,7 @@ class HomeScreenUser extends StatelessWidget {
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  totalWeights.toStringAsFixed(2) + ' kg',
+                                  widget.totalWeights.toStringAsFixed(2) + ' kg',
                                   style: TextStyle(
                                     color: Color.fromRGBO(0, 54, 18, 1),
                                     fontSize: 20,
@@ -375,7 +488,7 @@ class HomeScreenUser extends StatelessWidget {
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  'RM ${totalMoney.toStringAsFixed(2)}',
+                                  'RM ${widget.totalMoney.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     color: Color.fromRGBO(0, 54, 18, 1),
                                     fontSize: 20,
@@ -466,10 +579,11 @@ class HomeScreenUser extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserRequestPage()),
-                    );
+                    navigateToRequestPage();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => UserRequestPage()),
+                    // );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -619,7 +733,7 @@ class _HomePageState2 extends State<HomePageStaff> {
               HomeScreenStaff(),
               WMSPRecyclePage(),
               RequestPage(),
-              ProfilePage(),
+              staffProfilePage(),
               // WMSPRecyclePage(),
             ],
           ),
